@@ -4,4 +4,4 @@ import User from "../models/user.model";
 export async function registerUser(params) {
     const user = await User.create(params);
     return user;
-}
+}   

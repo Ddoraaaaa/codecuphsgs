@@ -7,8 +7,10 @@
   "author": "Ddoraaaaa <ilbp7024@gmail.com>",
   "license": "MIT",
   "private": false,
+  "type": "module",
   "scripts": {
     "dev": "nodemon --exec babel-node ./src/index.js",
+    "seed": "node ./scripts/seed.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -20,6 +22,9 @@
     "@babel/core": "^7.18.6",
     "@babel/node": "^7.18.6",
     "@babel/preset-env": "^7.18.6",
+    "@faker-js/faker": "^7.6.0",
+    "mongodb": "^4.7.0",
+    "mongoose-seed": "^0.6.0",
     "nodemon": "^2.0.18"
   }
 }
