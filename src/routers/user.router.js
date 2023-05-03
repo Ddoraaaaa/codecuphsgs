@@ -2,21 +2,22 @@ import { Router } from "express";
 import { 
     createSession, 
     endSession, 
-    requireSelf, 
-    requireAdmin 
 } from "../middlewares/authenticate"; 
 
 import { 
-    createUser
+    createUser, 
+    getUser, 
+    getAllUsers
 } from "../services/user.service"
 
 const userRouter = Router()
 
 userRouter.post("/register", createUser)
-// userRouter.get("/users", requireAdmin, getAllUsers)
-// userRouter.get("/user/:userId", getUser)
-// userRouter.post("/login", authenticate)
-// userRouter.post("/logout", endSession)
+userRouter.post("/login", createSession)
+userRouter.post("/logout", endSession)
+
+userRouter.get("/user/:userId", getUser)
+userRouter.get("/users", getAllUsers)
 
 export { 
     userRouter

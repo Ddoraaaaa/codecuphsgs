@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { User } from "../models/user.model"
+import bcrypt from "bcrypt"
 
 async function createUser(req, res, next) { 
     let username = req.body.username; 
@@ -19,8 +20,9 @@ async function createUser(req, res, next) {
     }
 
     let user = await User.create({ 
+        id: await User.count() + 1, 
         username: username, 
-        password: password, 
+        password: await bcrypt.hash(password, 10), 
         email: email
     })
 
@@ -31,27 +33,74 @@ async function createUser(req, res, next) {
     return res.status(200).send("Registered")
 }
 
-async function getUser(req, res, next) { 
-    const username = req.body.username; 
-    const email = req.body.email; 
-    user = username? await User.findOne({username}): await User.findOne({email}); 
-    if(!user) { 
-        return raiseError("Cannot find user"); 
+function userInfoRestrictedView(user) { 
+    return {
+        id: user.id, 
+        username: user.username,
+        email: user.email, 
+
+        name: user.name, 
+        isAdmin: user.isAdmin, 
+        contests: user.contests
     }
-    res.body.user = user.toJson(); 
-    
-    return next; 
 }
 
-// async function getAllUsers(req, res, next) { 
-//     try { 
-    
-//     }
-// }
+function userInfoUnrestrictedView(user) { 
+    return {
+        id: user.id, 
+        username: user.username,
+        email: user.email, 
+
+        name: user.name, 
+        isAdmin: user.isAdmin, 
+        contests: user.contests
+    }
+}
+
+async function getUser(req, res, next) { 
+    let userId = req.params.userId; 
+    let user = await User.findOne({id: userId})
+
+    if(!user) { 
+        return res.status(401).send({msg: "user not found"})
+    }
+
+    if(req.session.isAdmin || req.session.userId == userId) { 
+        return res.status(200).send({
+            msg: "retrieved successfully", 
+            user: userInfoUnrestrictedView(user)
+        })
+    }
+
+    return res.status(200).send({
+        msg: "retrieved successfully", 
+        user: userInfoRestrictedView(user)
+    })    
+}
+
+// received "cannot GET /users". thought it was because of mispelling some words, 
+// but it is in fact because of the function getAllUser.
+
+async function getAllUsers(req, res, next) { 
+    let users = await User.find()
+    console.log(users)
+
+    if(req.session.isAdmin) { 
+        return res.status(200).send({
+            msg: "retrieved successfully", 
+            users: users.map(userInfoUnrestrictedView)
+        })
+    }
+
+    return res.status(200).send({
+        msg: "retrieved successfully", 
+        users: users.map(userInfoRestrictedView)
+    })    
+}
 
 export { 
-    createUser
-    // getUser, 
-    // getAllUsers
+    createUser, 
+    getUser, 
+    getAllUsers, 
     
 }
