@@ -1,7 +1,9 @@
 import {User} from "../models/user.model";
 const bcrypt = require("bcrypt"); 
 
-async function createSession(req, res, next) { 
+async function createSession(req, res, next) {
+    console.log(req.session)
+    
     let username = req.body.username; 
     let password = req.body.password; 
     let email = req.body.email; 
@@ -20,8 +22,12 @@ async function createSession(req, res, next) {
         return res.status(404).send("Wrong password"); 
     }
 
+    console.log(user)
+
     req.session.userId = user.id; 
     req.session.isAdmin = user.isAdmin
+    console.log("after update: ")
+    console.log(req.session)
     return res.status(200).send("logged in"); 
 }
 

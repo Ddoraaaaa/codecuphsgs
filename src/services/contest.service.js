@@ -1,49 +1,137 @@
-import { Router } from "express";
-import {fetchAllContest, fetchOneContest, createContest, deleteContest} from "./contest.service"
+import { Contest } from "../models/contest.model";
+import assert from "assert"
+async function createContest(req, res, next) { 
+    console.log(req.session.userId)
+    if(!req.session.isAdmin) { 
+        return res.status(401).send({msg: "User is not admin"}); 
+    }
 
-const router = Router()
+    let contest = await Contest.create({
+        id: await Contest.count() + 1, 
+        name: req.body.name, 
+        startDate: req.body.startDate, 
+        endDate: req.body.endDate, 
+        gameId: req.body.gameId, 
+        isHidden: req.body.isHidden, 
+        hasRound16: req.body.hasRound16, 
+        roundCoolDown: req.body.roundCoolDown
+    })
 
-router.get('/contests/:ongoing', async (req, res) => {
-    const result = await fetchAllContest(req.params.ongoing);
+    if(!contest) { 
+        return res.status(401).send({msg: "creating contest failed"}); 
+    }
 
-    return res.json({message:"", total: result.length, result: result});
-})
+    return res.status(200).send({msg: "creating contest succeeded"}); 
+}
 
-router.get('/contests/:contestId', async (req, res) => {
-    const result = await fetchOneContest(req.params.contestId);
+async function getAllContests(req, res, next) { 
+    let ongoing = req.query.ongoing; 
 
-    return res.json({
-        message:"registerrrr succesful", 
-        contestId:result.contestId, 
-        name: result.name, 
-        startDate: result.startDate, 
-        duration: result.endDate - result.startDate + 1, 
-        gameId: result.gameId, 
-        players: result.players, 
-    });
-})
+    if(ongoing == null) { 
+        return res.status(401).send({msg: "Missing parameters"}); 
+    }
 
-router.post('/createcontest', async (req, res) => {
-    const body = req.body;
+    let now = Date.now(); 
+    let contests = ongoing? 
+        await Contest.find({
+            startDate: {$lte: now}, 
+            endDate: {$gte: now}
+        }): 
+        await Contest.find(); 
+    
+    if(!req.session.isAdmin) { 
+        contests = contests.map(contestInfoRestrictedView); 
+    }
 
-    const result = await createContest(body);
+    return res.status(200).send({
+        msg: "Successful", 
+        contests
+    }); 
+}
 
-    return res.json({contestId: result.contestId});
-})
+async function getContest(req, res, next) { 
+    let contestId = req.param.contestId; 
 
-router.post('/deletecontest', async (req, res) => {
-    const body = req.body;
+    if(contestId == null) { 
+        return res.status(401).send({msg: "Missing parameters"}); 
+    }
 
-    const result = await deleteContest(body.contestId);
+    let contest = await Contest.find({id: contestId}); 
+    if(!contest) { 
+        return res.status(401).send({msg: "Contest not found"}); 
+    }
 
-    return res.json({msg: result.msg});
-})
+    if(!req.session.isAdmin) { 
+        contest = contestInfoRestrictedView(contest); 
+    }
 
-router.post('/contest/:contestId/submit', async (req, res) => {
-    const body = req.body;
+    return res.status(200).send({
+        msg: "Successful", 
+        contest
+    })
+}
 
-    const result = await createContest(body);
+async function deleteContest(req, res, next) { 
+    let contestId = req.query.contestId; 
 
-    return res.json({contestId: result.contestId});
-})
-export default router;
+    if(contestId == null) { 
+        return res.status(401).send({msg: "Missing contestId"}); 
+    }
+
+    if(!req.session.isAdmin) { 
+        return res.status(401).send({msg: "User is not admin"})
+    }
+
+    let contestFoundCount = await Contest.count({id: contestId})
+    assert( contestFoundCount <= 1); 
+    if(contestFoundCount == 0) { 
+        return res.status(401).send({msg:"No contest found"}); 
+    }
+
+    let {acknowledged, deletedCount} = await Contest.deleteMany({id: contestId}); 
+    assert(deletedCount == 1)
+
+    return res.status(200).send({msg: "deleted"}); 
+}
+
+async function submitToContest(req, res, next) { 
+    let contestId = req.params.contestId; 
+    console.log(req.body);
+    console.log(req.files);
+    return res.send()
+    let sourceFile = req.body.sourceFile; 
+    let userId = req.session.userId; 
+
+    if(!req.session.userId) { 
+        return res.status(401).send({msg: "Not logged in"}); 
+    }
+
+    if(!contestId) { 
+        return res.status(401).send({msg: "Missing contestId"}); 
+    }
+
+    let contestFoundCount = await Contest.count({id: contestId})
+    assert( contestFoundCount <= 1); 
+    if(contestFoundCount == 0) { 
+        return res.status(401).send({msg:"No contest found"}); 
+    }
+
+    if(!sourceFile) { 
+        return res.status(401).send({msg: "Missing file"}); 
+    }
+
+    let saveSucceeded = await saveFile(contestId, userId, sourceFile); 
+    if(!saveSucceeded) { 
+        return res.status(401).send({msg: "Saving failed"}); 
+    }
+
+    return res.status(200).send({msg: "saving succeeded"}); 
+}
+
+export { 
+    createContest, 
+    getAllContests, 
+    getContest, 
+    deleteContest, 
+    submitToContest, 
+}

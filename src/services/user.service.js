@@ -1,22 +1,22 @@
-import { Router } from "express";
 import { User } from "../models/user.model"
 import bcrypt from "bcrypt"
-
 async function createUser(req, res, next) { 
     let username = req.body.username; 
     let email = req.body.email;
     let password = req.body.password; 
+
+    console.log(req.body)
     
     if((!username && !email) || !password) { 
-        return res.status(401).send("Missing information"); 
+        return res.status(401).send({msg: "Missing information"}); 
     }
 
     if(await User.findOne({username})) { 
-        return res.status(401).send("Username already exists"); 
+        return res.status(401).send({msg: "Username already exists"}); 
     }
 
     if(await User.findOne({email})) { 
-        return res.status(401).send("Email aready exists"); 
+        return res.status(401).send({msg: "Email aready exists"}); 
     }
 
     let user = await User.create({ 
@@ -27,7 +27,7 @@ async function createUser(req, res, next) {
     })
 
     if(!user) { 
-        return res.status(401).send("Failed for some reason"); 
+        return res.status(401).send({msg: "Failed for some reason"} ); 
     }
 
     return res.status(200).send("Registered")

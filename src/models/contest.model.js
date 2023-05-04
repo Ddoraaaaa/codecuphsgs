@@ -1,15 +1,19 @@
 import { Schema, model } from "mongoose";
 
 const contestSchema = new Schema({
-	contestId: {type: Number},
-    name: {type: String},
-	isHidden: {type: Boolean, default: false},
+	id: {type: Number, required: true, unique: true},
+    name: {type: String, required: true},
+	gameId: {type: Number}, 
 	startDate: {type: Date, default: Date.now},
 	endDate: {type: Date, default: Date.now},
-	gameId: {type: Number}
+	isHidden: {type: Boolean, default: false},
+	hasRound16: {type: Boolean, default: false}, 
+	roundCoolDown: {type: Number}
 })
 
 const Contest = model('Contest', contestSchema)
-
-export default Contest
+//
+export { 
+	Contest
+}
 
