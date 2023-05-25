@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import session from "express-session";
+import cors from "cors"
 import { userRouter } from "./routers/user.router";
 import { contestRouter } from "./routers/contest.router";
 
@@ -15,6 +16,8 @@ const store = new MongoDBStore({
     uri: "mongodb://localhost:27017/codecup",
     collection: "sessions"
 }); 
+
+app.use(cors()); 
 
 app.use(require('express-session')({
     secret: 'This is a secret',
@@ -58,6 +61,10 @@ app.use(express.static('public'));
 app.use(userRouter); 
 app.use(contestRouter); 
 
-app.listen(3000, () => {
+app.get("/", (req, res, next) => { 
+  return res.status(200).send("server reached"); 
+})
+
+app.listen(5000, () => {
     console.log("tao da song");
 })

@@ -2,7 +2,7 @@ import Dashboard from "./Users/Dashboard"
 import Settings from "./Users/Settings"
 import { LoginForm } from "./Users/AuthComponents"
 import CompareForm from "./Problems/CompareForm"
-import ProblemList from "./Problems/ProblemList"
+import ContestList from "./Problems/ContestList"
 
 export function HeaderComponent() {
   return (
@@ -37,7 +37,7 @@ export function BodyComponent() {
     <body className="my-20">
       <Dashboard name="Giap Vu" user_id="1000"/>
       <LoginForm />
-      <ProblemList />
+      <ContestList />
       <Settings />
       <CompareForm />
     </body>

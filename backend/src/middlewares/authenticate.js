@@ -1,4 +1,5 @@
 import {User} from "../models/user.model";
+import { userInfoRestrictedView } from "../services/user.service";
 const bcrypt = require("bcrypt"); 
 
 async function createSession(req, res, next) {
@@ -10,16 +11,18 @@ async function createSession(req, res, next) {
 
 
     if((!username && !email) || !password) { 
-        return res.status(500).send("Missing information"); 
+        return res.status(401).send({msg: "Missing information"}); 
     }
 
     const user = username? await User.findOne({username}): await User.findOne({email})
     if(!user) { 
-        return res.status(404).send("User not found"); 
+        return res.status(401).send({msg: "User not found"}); 
     }
 
     if((await bcrypt.compare(password, user.password) == false)) { 
-        return res.status(404).send("Wrong password"); 
+        return res.status(401).send({
+            msg: "Wrong password", 
+        }); 
     }
 
     console.log(user)
@@ -28,7 +31,11 @@ async function createSession(req, res, next) {
     req.session.isAdmin = user.isAdmin
     console.log("after update: ")
     console.log(req.session)
-    return res.status(200).send("logged in"); 
+    console.log(user.id)
+    return res.status(200).send({
+        msg: "logged in", 
+        user: userInfoRestrictedView(user)
+    }); 
 }
 
 async function endSession(req, res, next) { 

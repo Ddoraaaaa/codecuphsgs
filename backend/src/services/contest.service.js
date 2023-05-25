@@ -24,20 +24,30 @@ async function createContest(req, res, next) {
     return res.status(200).send({msg: "creating contest succeeded"}); 
 }
 
-async function getAllContests(req, res, next) { 
-    let ongoing = req.query.ongoing; 
-
-    if(ongoing == null) { 
-        return res.status(401).send({msg: "Missing parameters"}); 
+function contestInfoRestrictedView(contest) { 
+    return { 
+        id: contest.id, 
+        name: contest.name, 
+        startDate: contest.startDate, 
+        endDate: contest.endDate
     }
+}
 
-    let now = Date.now(); 
-    let contests = ongoing? 
-        await Contest.find({
-            startDate: {$lte: now}, 
-            endDate: {$gte: now}
-        }): 
-        await Contest.find(); 
+async function getAllContests(req, res, next) { 
+
+    // if(ongoing == null) { 
+    //     return res.status(401).send({msg: "Missing parameters"}); 
+    // }
+
+    // let now = Date.now(); 
+    // let contests = ongoing? 
+    //     await Contest.find({
+    //         startDate: {$lte: now}, 
+    //         endDate: {$gte: now}
+    //     }): 
+    //     await Contest.find(); 
+
+    let contests = await Contest.find(); 
     
     if(!req.session.isAdmin) { 
         contests = contests.map(contestInfoRestrictedView); 

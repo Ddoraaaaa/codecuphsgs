@@ -30,7 +30,10 @@ async function createUser(req, res, next) {
         return res.status(401).send({msg: "Failed for some reason"} ); 
     }
 
-    return res.status(200).send("Registered")
+    return res.status(200).send({
+        msg: "Registered", 
+        user: userInfoRestrictedView(user)
+    })
 }
 
 function userInfoRestrictedView(user) { 
@@ -102,5 +105,6 @@ export {
     createUser, 
     getUser, 
     getAllUsers, 
-    
+    userInfoRestrictedView, 
+    userInfoUnrestrictedView
 }
