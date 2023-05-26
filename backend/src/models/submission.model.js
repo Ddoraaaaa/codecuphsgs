@@ -16,6 +16,6 @@ submissionSchema.methods.toJson = function () {
     }
 }
 
-const Submission = new Model('Submission', submissionSchema)
+const Submission = model('Submission', submissionSchema)
 
 export default Submission

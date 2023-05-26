@@ -8,6 +8,6 @@ const matchSchema = new Schema({
     logUrl: {type: String}
 })
 
-const match = new Model('match', matchSchema)
+const match = model('match', matchSchema)
 
 export default match

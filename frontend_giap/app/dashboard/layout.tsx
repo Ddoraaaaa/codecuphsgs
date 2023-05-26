@@ -10,7 +10,7 @@ export default function DashboardLayout({
 }) {  
     const userInfo = getUserInfo(); 
     return (
-        <div className="w-full h-full bg-white">
+        <div className="w-full bg-white">
             <NavBar userInfo={userInfo}></NavBar>
             <div className="">
                 {children}

@@ -9,7 +9,7 @@ export default function useContestDetails(initialContestId: number){
         let fetchResult = await getContestDetails(initialContestId); 
         if(fetchResult.success === false) { 
             setContestDetails(null); 
-            console.log(fetchResult.msg); 
+            alert(fetchResult.msg); 
         }
         else { 
             assert(fetchResult.contestDetails != undefined); 
@@ -22,7 +22,7 @@ export default function useContestDetails(initialContestId: number){
             updateContestDetails(); 
         }
         catch(error) { 
-            console.log(error); 
+            alert(error); 
         }
     }, [])
 

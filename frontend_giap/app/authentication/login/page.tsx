@@ -14,16 +14,13 @@ export default function LoginPage() {
 
     async function updateUsername(event) { 
         await setUsername(event.target.value); 
-        console.log(username); 
     }
     async function updatePassword(event) { 
         await setPassword(event.target.value); 
-        console.log(password); 
     }
 
     async function updateEmail(event) { 
         await setEmail(event.target.value); 
-        console.log(email); 
     }
 
     async function handleSubmitButtonClicked(event) { 
@@ -40,15 +37,15 @@ export default function LoginPage() {
                 try { 
                     router.push("/dashboard"); 
                 } catch(error) { 
-                    console.log(error); 
+                    alert(error); 
                 }
             }
             else { 
-                console.log(loginResult.msg); 
+                alert(loginResult.msg); 
             }
         }
         catch (error) { 
-            console.log(error); 
+            alert(error); 
         }
     }
 

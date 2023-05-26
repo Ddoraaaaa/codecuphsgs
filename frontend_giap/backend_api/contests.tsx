@@ -36,7 +36,6 @@ async function getAllContests() : Promise<{
         let jsonResponse = await response.json(); 
         let msg = jsonResponse.msg;  
         let contests = jsonResponse.contests; 
-        console.log(jsonResponse); 
         
         return { 
             success, 
@@ -45,8 +44,8 @@ async function getAllContests() : Promise<{
                 return { 
                     contestId: contest.id, 
                     contestName: contest.name, 
-                    startDate: contest.startDate, 
-                    endDate: contest.endDate
+                    startDate: new Date(contest.startDate), 
+                    endDate: new Date(contest.endDate),
                 }
             })
         }
@@ -65,7 +64,6 @@ async function getContestDetails(
     msg: string, 
     contestDetails?: contestDetailsI 
 }> { 
-    console.log("function called!")
     try { 
         let response = await fetch("/api/contest/" + contestId, 
             { 
@@ -112,8 +110,8 @@ async function getContestDetails(
             contestDetails: { 
                 contestId: contest.id, 
                 contestName: contest.name, 
-                startDate: contest.startDate, 
-                endDate: contest.endDate, 
+                startDate: new Date(contest.startDate), 
+                endDate: new Date(contest.endDate), 
                 gameId: game.id, 
                 gameName: game.name, 
                 gameStatementUrl: game.statementUrl, 

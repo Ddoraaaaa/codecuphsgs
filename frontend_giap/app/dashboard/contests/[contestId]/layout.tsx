@@ -31,7 +31,7 @@ export default function ContestDetailsLayout({
     ]; 
     
     return (
-        <div className="h-full w-full">
+        <div className="w-full">
             <SectionHeader sectionTabs={sectionTabs}></SectionHeader>
             {children}
         </div>

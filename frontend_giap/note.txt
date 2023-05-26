@@ -1,0 +1,6 @@
+w -100 is gud, but h-100 is dangerous
+use alert to debug errors 
+use try catch block when uncertain
+proxy -> avoid cors
+
+typescript does not auto convert string into date!!!! dangerous!!!!!

@@ -1,4 +1,4 @@
-import { Schema, Model } from "mongoose";
+import { Schema, model } from "mongoose";
 
 const gameSchema = new Schema({
     gameId: {type: Number}, 
@@ -8,5 +8,7 @@ const gameSchema = new Schema({
     renderUrl: {type: String}
 })
 
-const gameModel = newModel('game', gameSchema)
-export default gameModel
+const gameModel = model('game', gameSchema)
+export { 
+    gameModel
+}

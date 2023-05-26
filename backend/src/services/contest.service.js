@@ -1,5 +1,8 @@
 import { Contest } from "../models/contest.model";
 import assert from "assert"
+import sourceCodeUpload from "../middlewares/upload";
+import { error } from "console";
+import multer from "multer";
 async function createContest(req, res, next) { 
     console.log(req.session.userId)
     if(!req.session.isAdmin) { 
@@ -29,7 +32,8 @@ function contestInfoRestrictedView(contest) {
         id: contest.id, 
         name: contest.name, 
         startDate: contest.startDate, 
-        endDate: contest.endDate
+        endDate: contest.endDate, 
+        gameId: contest.gameId
     }
 }
 
@@ -60,20 +64,23 @@ async function getAllContests(req, res, next) {
 }
 
 async function getContest(req, res, next) { 
-    let contestId = req.param.contestId; 
+    let contestId = req.params.contestId; // bug: params, not param
+    console.log(contestId)
 
     if(contestId == null) { 
         return res.status(401).send({msg: "Missing parameters"}); 
     }
 
-    let contest = await Contest.find({id: contestId}); 
+    let contest = await Contest.findOne({id: contestId}); 
     if(!contest) { 
         return res.status(401).send({msg: "Contest not found"}); 
     }
-
+    console.log(contest); 
     if(!req.session.isAdmin) { 
         contest = contestInfoRestrictedView(contest); 
     }
+
+    console.log(contest); 
 
     return res.status(200).send({
         msg: "Successful", 
@@ -106,36 +113,25 @@ async function deleteContest(req, res, next) {
 
 async function submitToContest(req, res, next) { 
     let contestId = req.params.contestId; 
-    console.log(req.body);
-    console.log(req.files);
-    return res.send()
-    let sourceFile = req.body.sourceFile; 
-    let userId = req.session.userId; 
-
-    if(!req.session.userId) { 
-        return res.status(401).send({msg: "Not logged in"}); 
-    }
 
     if(!contestId) { 
         return res.status(401).send({msg: "Missing contestId"}); 
     }
-
-    let contestFoundCount = await Contest.count({id: contestId})
-    assert( contestFoundCount <= 1); 
-    if(contestFoundCount == 0) { 
-        return res.status(401).send({msg:"No contest found"}); 
+    if(!req.session.userId) { 
+        console.log(req.session)
+        return res.status(401).send({msg: "Not logged in"}); 
     }
-
-    if(!sourceFile) { 
-        return res.status(401).send({msg: "Missing file"}); 
-    }
-
-    let saveSucceeded = await saveFile(contestId, userId, sourceFile); 
-    if(!saveSucceeded) { 
-        return res.status(401).send({msg: "Saving failed"}); 
-    }
-
-    return res.status(200).send({msg: "saving succeeded"}); 
+    sourceCodeUpload(req, res, (error) => { 
+        if (error instanceof multer.Multererroror) {
+            throw(error); 
+            return res.status(200).send({msg: "Server error"}); 
+        } else if (error) {
+            console.log("errorOR: " + erroror); 
+            throw(error); 
+            return res.status(200).send({msg: "Server error"}); 
+        }
+    })
+    return res.status(200).send({msg: "submitted"}); 
 }
 
 export { 

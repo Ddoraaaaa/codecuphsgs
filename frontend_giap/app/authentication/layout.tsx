@@ -4,7 +4,7 @@ export default function AuthenticationLayout({
     children: React.ReactNode
   }) {  
     return (
-      <div className="h-full w-full">
+      <div className="w-full">
         {children}
       </div>
     )

@@ -14,7 +14,6 @@ export default function SubmitPage() {
     function handleDrag(event) {
         event.preventDefault(); 
         event.stopPropagation(); 
-        console.log("drag state changed!!"); 
         if(event.type == "dragenter" || event.type == "dragover") { 
             setDragActive(true); 
         } else if (event.type == "dragleave") { 
@@ -36,7 +35,6 @@ export default function SubmitPage() {
         event.preventDefault(); 
         if(event.target && event.target.files && event.target.files[0]) { 
             setFile(event.target.files[0]); 
-            console.log(file); 
         }
     }
 

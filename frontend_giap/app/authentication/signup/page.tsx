@@ -15,16 +15,13 @@ export default function SignupPage() {
 
     async function updateUsername(event) { 
         await setUsername(event.target.value); 
-        console.log(username); 
     }
     async function updatePassword(event) { 
         await setPassword(event.target.value); 
-        console.log(password); 
     }
 
     async function updateEmail(event) { 
         await setEmail(event.target.value); 
-        console.log(email); 
     }
 
     async function handleSubmitButtonClicked(event) { 
@@ -41,20 +38,20 @@ export default function SignupPage() {
                 try { 
                     router.push("/dashboard"); 
                 } catch(error) { 
-                    console.log(error); 
+                    alert(error); 
                 }
             }
             else { 
-                console.log(signupResult.msg); 
+                alert(signupResult.msg); 
             }
         }
         catch (error) { 
-            console.log(error); 
+            alert(error); 
         }
     }
 
     return (
-        <div className="bg-white w-full h-full flex content-center justify-center items-center">
+        <div className="bg-white w-full flex content-center justify-center items-center">
             <div className="flex-col justify-center">
                 <div className="text-center">
                     <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Signup</h2>
