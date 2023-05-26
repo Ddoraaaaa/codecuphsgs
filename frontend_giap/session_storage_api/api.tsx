@@ -4,7 +4,7 @@ interface userInfoI {
     userIsAdmin: boolean; 
 }
 
-function setUserInfo(userInfo: userInfoI) { 
+function setUserInfo(userInfo: userInfoI | null) { 
     sessionStorage.setItem('userInfo', JSON.stringify(userInfo)); 
 }
 

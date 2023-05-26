@@ -1,8 +1,15 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-    env: { 
-        NEXT_PUBLIC_API_URL: "localhost:5000", 
-    }, 
-}
-
-module.exports = nextConfig
+module.exports = () => {
+    const rewrites = () => {
+        return [
+        {
+            source: "/api/:path*",
+            destination: 'http://localhost:5000/:path*' // proxyto backend
+        },
+        ];
+    };
+    return {
+        rewrites,
+    };
+};
+  

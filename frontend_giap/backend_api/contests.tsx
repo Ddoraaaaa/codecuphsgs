@@ -1,7 +1,5 @@
 import assert from 'assert';
 
-const API_URL = "http://localhost:5000"; 
-
 interface contestInfoI { 
     contestId: number, 
     contestName: string, 
@@ -28,7 +26,7 @@ async function getAllContests() : Promise<{
     // cannot figure out the bug???? Just need to try catch!!!
     try { 
         // why is it not working? apparently await can escape try / catch block
-        let response = await fetch(API_URL + "/contests", 
+        let response = await fetch("/api/contests", 
             { 
                 method: "GET"
             }
@@ -67,8 +65,9 @@ async function getContestDetails(
     msg: string, 
     contestDetails?: contestDetailsI 
 }> { 
+    console.log("function called!")
     try { 
-        let response = await fetch(API_URL + "/contest/" + contestId, 
+        let response = await fetch("/api/contest/" + contestId, 
             { 
                 method: "GET"
             }
@@ -88,7 +87,7 @@ async function getContestDetails(
         }
 
         let responseGame = await fetch(
-            API_URL + "/game/" + contest.gameId, 
+            "/api/game/" + contest.gameId, 
             { 
                 method: "GET"
             }
@@ -129,6 +128,45 @@ async function getContestDetails(
     }
 }
 
+async function submitCode({
+    contestId, 
+    file
+}:{ 
+    contestId: number, 
+    file: File
+}): Promise<{ 
+    success: boolean, 
+    msg: string
+}> {
+    try { 
+        let data = new FormData(); 
+        data.append("sourceCode", file); 
+        let response = await fetch("/api/contest/" + contestId + "/submit", 
+            { 
+                method: "POST", 
+                body: data
+            }
+        ); 
+        let success = response.ok;
+        let jsonResponse = await response.json(); 
+        let msg = jsonResponse.msg;  
+
+        console.log(jsonResponse); 
+
+        return { 
+            success, 
+            msg
+        }
+
+    }catch(error) {
+        alert(error); 
+        return { 
+            success: false, 
+            msg: error.toString()
+        }; 
+    }
+}
+
 export type { 
     contestInfoI, 
     contestDetailsI
@@ -136,5 +174,6 @@ export type {
 
 export { 
     getAllContests, 
-    getContestDetails
+    getContestDetails, 
+    submitCode
 }

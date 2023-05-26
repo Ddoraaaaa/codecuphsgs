@@ -1,8 +1,35 @@
 import { userInfoI } from '@/session_storage_api/api';
 import assert from 'assert';
 
-const API_URL = "http://localhost:5000"; 
+async function logout(): Promise<{ 
+    success: boolean, 
+    msg: string
+}> {
+    try { 
+        // why is it not working? apparently await can escape try / catch block
+        let response = await fetch("/api/logout", 
+            { 
+                method: "GET", 
+            }
+        ); 
 
+        let success = response.ok;
+        let jsonResponse = await response.json(); 
+        let msg = jsonResponse.msg;  
+        console.log(jsonResponse); 
+        
+        return { 
+            success, 
+            msg, 
+        }
+    } catch(error) {
+        alert(error); 
+        return { 
+            success: false, 
+            msg: error.toString()
+        }
+    }
+}
 
 async function signup({
     username, 
@@ -20,7 +47,7 @@ async function signup({
     // cannot figure out the bug???? Just need to try catch!!!
     try { 
         // why is it not working? apparently await can escape try / catch block
-        let response = await fetch(API_URL + "/register", 
+        let response = await fetch("/api/register", 
             { 
                 method: "POST", 
                 headers: {
@@ -73,7 +100,7 @@ async function login({
 }> { 
     // cannot figure out the bug???? Just need to try catch!!!
     try { 
-        let response = await fetch(API_URL + "/login", 
+        let response = await fetch("/api/login", 
             { 
                 method: "POST", 
                 headers: {
@@ -116,5 +143,6 @@ async function login({
 
 export { 
     signup, 
-    login
+    login, 
+    logout
 }
