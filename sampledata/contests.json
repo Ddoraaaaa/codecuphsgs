@@ -1,0 +1,61 @@
+[{
+  "_id": {
+    "$oid": "64533b8e0f568555f5c6ff31"
+  },
+  "id": 1,
+  "name": "Upcoming Connect 4",
+  "startDate": {
+    "$date": {
+      "$numberLong": "1685422734838"
+    }
+  },
+  "endDate": {
+    "$date": {
+      "$numberLong": "1685509134838"
+    }
+  },
+  "isHidden": false,
+  "hasRound16": false,
+  "__v": 0,
+  "gameId": 1
+},{
+  "_id": {
+    "$oid": "6470d2539afe28c94fac07d9"
+  },
+  "id": 2,
+  "name": "Ongoing Connect 4",
+  "startDate": {
+    "$date": {
+      "$numberLong": "1685077134838"
+    }
+  },
+  "endDate": {
+    "$date": {
+      "$numberLong": "1685509134838"
+    }
+  },
+  "isHidden": false,
+  "hasRound16": false,
+  "__v": 0,
+  "gameId": 1
+},{
+  "_id": {
+    "$oid": "6470d7709afe28c94fac07dc"
+  },
+  "id": 3,
+  "name": "Past Connect 4",
+  "startDate": {
+    "$date": {
+      "$numberLong": "1684990734838"
+    }
+  },
+  "endDate": {
+    "$date": {
+      "$numberLong": "1685077134838"
+    }
+  },
+  "isHidden": false,
+  "hasRound16": false,
+  "__v": 0,
+  "gameId": 1
+}]

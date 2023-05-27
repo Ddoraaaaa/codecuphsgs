@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 
-export default function ProblemList() {
+export default function ContestList() {
   // for demo only. 
-  const [problemList, updateProblemList] = useState([]); 
+  const [ContestList, updateContestList] = useState([]); 
   const update = () => { 
     console.log("bruh moment"); 
-    let newProblemList = [...problemList]; // newProblemList = problemList => bug
+    let newContestList = [...ContestList]; // newContestList = ContestList => bug
     for (let i = 0; i < 3; i++) {
-      newProblemList.push(`Problem #${i+1}: Beat the meat level ${i+1}`); 
+      newContestList.push(`Problem #${i+1}: Beat the meat level ${i+1}`); 
     }
-    updateProblemList(newProblemList); 
+    updateContestList(newContestList); 
   }; 
-  let list = problemList.map((problem) => <div className="text-white bg-black m-2 p-2">{problem}</div>)
+  let list = ContestList.map((problem) => <div className="text-white bg-black m-2 p-2">{problem}</div>)
   return ( 
     <div className="m-3 p-3 border-black border-2">
       <div className="font-bold text-3xl">Problem list</div>
