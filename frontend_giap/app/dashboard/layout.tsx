@@ -3,6 +3,7 @@
 import NavBar from "./navbar";
 import { getUserInfo } from "@/session_storage_api/api";
 import { useRouter } from "next/router";
+
 export default function DashboardLayout({
   children
 }: {

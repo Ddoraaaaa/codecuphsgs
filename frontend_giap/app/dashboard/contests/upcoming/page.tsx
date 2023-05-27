@@ -29,7 +29,7 @@ function UpcomingContest({
     return (
         <div className="min-w-0 flex gap-x-4">
             <Link href={`/dashboard/contests/${contestInfo.contestId}`}
-                className="text-sm font-semibold leading-6 text-gray-900">
+                className="text-sm underline font-semibold leading-6 text-gray-900">
                 {contestInfo.contestName}
             </Link>
             <p>Start in {beforeStart}</p>
@@ -46,7 +46,7 @@ export default function UpcomingContests() {
         console.log(contestsInfo); 
         return (
             <div className="w-full">
-                <h2>Upcoming Contests</h2>
+                {/* <h2>Upcoming Contests</h2> */}
                 <ul className={`divide-y divide-gray-100`}>
                     {contestsInfo.map((contestInfo) => { 
                         if(contestInfo.startDate < new Date()) { 

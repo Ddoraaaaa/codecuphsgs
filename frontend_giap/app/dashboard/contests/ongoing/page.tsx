@@ -24,7 +24,7 @@ function OngoingContest({
     return (
         <div className="min-w-0 flex gap-x-4">
             <Link href={`/dashboard/contests/${contestInfo.contestId}`}
-                className="text-sm font-semibold leading-6 text-gray-900">
+                className="text-sm underline font-semibold leading-6 text-gray-900">
                 {contestInfo.contestName}
             </Link>
             <p>End in {beforeEnd}</p>
@@ -38,7 +38,7 @@ export default function OngoingContests() {
         assert (contestsInfo != null); 
         return (
             <div className="w-full">
-                <h2>Ongoing Contests</h2>
+                {/* <h2>Ongoing Contests</h2> */}
                 <ul className={`divide-y divide-gray-100`}>
                     {contestsInfo.map((contestInfo) => { 
                         if(contestInfo.startDate > new Date() ||

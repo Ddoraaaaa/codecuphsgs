@@ -1,0 +1,22 @@
+[{
+  "_id": {
+    "$oid": "64531177c0436a518faceecc"
+  },
+  "id": 7,
+  "username": "admin",
+  "password": "$2b$10$c6fVfBvsJi8dVUzHKvQvPe5Abkfn/jP4AUZ2CEYeuCvKYSnBJbvxm",
+  "isAdmin": true,
+  "contests": [],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "646df4cbf15bb1549d291a8e"
+  },
+  "id": 2,
+  "username": "a",
+  "password": "$2b$10$xVNlMrcjRrrV.Kusrg.tTeTe25zdhkg2mexSwEIAbuCZsSYWWr0Sy",
+  "email": "a@a",
+  "isAdmin": false,
+  "contests": [],
+  "__v": 0
+}]
