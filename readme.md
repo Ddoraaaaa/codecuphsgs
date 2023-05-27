@@ -5,20 +5,18 @@ WIP
 Build and run the front end server: 
 
 ```
-cd frontend_giap
-npm build
+cd frontend_giap &&
+npm run build &&
 npm run dev
-cd ..
 ```
 Then go to http://localhost:3000/
 <h3>Back end</h3>
 Build and run the backend server: 
 
 ```
-cd backend
-npm build
+cd backend && 
+npm i &&
 npm run dev
-cd ..
 ```
 <h3>Database</h3>
 Set up a local MongoDB database: 
@@ -42,6 +40,8 @@ password: admin
 ```
 
 <h2>Preview</h2>
+
+
 
 <img width="1488" alt="Screen Shot 2023-05-27 at 11 23 18 pm" src="https://github.com/Ddoraaaaa/codecuphsgs/assets/112223883/d3930cea-0ac8-4dfe-8583-3ff24643a0a5">
 <img width="1490" alt="Screen Shot 2023-05-27 at 11 23 24 pm" src="https://github.com/Ddoraaaaa/codecuphsgs/assets/112223883/b3ca240a-8b6c-4be7-9cac-2f348ff9f656">
