@@ -1,5 +1,5 @@
 <h1>Codecup HSGS</h1>
-WIP
+A website to host programming contests. 
 <h2>Build and run a demo webpage</h2>
 <h3>Front end</h3>
 Build and run the front end server: 
