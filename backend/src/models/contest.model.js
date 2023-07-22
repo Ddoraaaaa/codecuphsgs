@@ -6,9 +6,10 @@ const contestSchema = new Schema({
 	gameId: {type: Number}, 
 	startDate: {type: Date, default: Date.now},
 	endDate: {type: Date, default: Date.now},
-	isHidden: {type: Boolean, default: false},
-	hasRound16: {type: Boolean, default: false}, 
-	roundCoolDown: {type: Number}
+	runTrialMatches: {type: Boolean, default: true}, 
+    judgeMode: {type: String, enum: ['manual-judge', 'auto-judge'], default: 'auto-judge'}, 
+    contestFormat: {type: String, enum: ['round-16', 'all-vs-all'], default: 'all-vs-all'} , 
+	judge: {type: Boolean, default: false}
 })
 
 const Contest = model('Contest', contestSchema)

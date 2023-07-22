@@ -1,13 +1,14 @@
-import { Schema, Model } from "mongoose";
+import { Schema, model } from "mongoose";
 
 const matchSchema = new Schema({
-    matchId: {type: Number}, 
-    gameId: {type: Number}, 
-    player1: {type: Number}, 
-    player2: {type: Number}, 
-    logUrl: {type: String}
+    id: {type: Number}, 
+    contestId: {type: Number}, 
+    submission1Id: {type: Number}, 
+    submission2Id: {type: Number}, 
+    logUrl: {type: String, default: null}
 })
 
-const match = model('match', matchSchema)
 
-export default match
+const Match = model('match', matchSchema)
+
+export  {Match}; 

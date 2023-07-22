@@ -8,26 +8,32 @@ async function createContest(req, res, next) {
     if(!req.session.isAdmin) { 
         return res.status(401).send({msg: "User is not admin"}); 
     }
+    try {
+        let contest = await Contest.create({
+            id: await Contest.count() + 1, 
+            name: req.body.name, 
+            startDate: req.body.startDate, 
+            endDate: req.body.endDate, 
+            gameId: req.body.gameId, 
+            runTrialMatches: req.body.runTrialMatches, 
+            judgeMode: req.body.judgeMode, 
+            contestFormat: req.body.contestFormat
+        })
 
-    let contest = await Contest.create({
-        id: await Contest.count() + 1, 
-        name: req.body.name, 
-        startDate: req.body.startDate, 
-        endDate: req.body.endDate, 
-        gameId: req.body.gameId, 
-        isHidden: req.body.isHidden, 
-        hasRound16: req.body.hasRound16, 
-        roundCoolDown: req.body.roundCoolDown
-    })
+        if(!contest) { 
+            return res.status(401).send({msg:  `Creating contest failed`}); 
+        }
 
-    if(!contest) { 
-        return res.status(401).send({msg: "creating contest failed"}); 
+        createMatches(contest); 
+
+        return res.status(200).send({msg: "creating contest succeeded"}); 
+    } catch(e) { 
+        return res.status(401).send({msg:  `Error: ${e}`}); 
     }
-
-    return res.status(200).send({msg: "creating contest succeeded"}); 
 }
 
 function contestInfoRestrictedView(contest) { 
+    console.log(contest.id); 
     return { 
         id: contest.id, 
         name: contest.name, 

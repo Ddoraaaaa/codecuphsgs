@@ -1,10 +1,12 @@
-import { Schema, Model } from "mongoose";
+import { Schema, model } from "mongoose";
 
 const submissionSchema = new Schema ({ 
-    userId: {type: String}, 
+    id: {type: Number}, 
+    userId: {type: Number}, 
     contestId: {type: String}, 
+    submissionDate: {type: Date}, 
     language: {type: String}, 
-    sourceUrl: {type: String}
+    sourceUrl: {type: String}, 
 })
 
 submissionSchema.methods.toJson = function () { 
@@ -16,6 +18,6 @@ submissionSchema.methods.toJson = function () {
     }
 }
 
-const Submission = model('Submission', submissionSchema)
+const Submission = model('Submission', submissionSchema); 
 
-export default Submission
+export default Submission; 
