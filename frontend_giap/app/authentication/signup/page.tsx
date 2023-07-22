@@ -2,29 +2,32 @@
 
 import {signup} from "../../../backend_api/users"
 import { setUserInfo } from "@/session_storage_api/api";
-import { assert } from "console";
-import {useState} from "react"
+import assert from "assert";
+import {FormEvent, useState} from "react"
 import { useRouter } from "next/navigation";
 
 
 export default function SignupPage() { 
-    let [username, setUsername] = useState(null); 
-    let [password, setPassword] = useState(null); 
-    let [email, setEmail] = useState(null); 
+    const [username, setUsername] = useState<null | string>(null); 
+    const [password, setPassword] = useState<null | string>(null); 
+    const [email, setEmail] = useState<null | string>(null); 
     const router = useRouter(); 
 
-    async function updateUsername(event) { 
-        await setUsername(event.target.value); 
+    async function updateUsername(event: FormEvent) { 
+        const target = event.target as HTMLInputElement; 
+        await setUsername(target.value); 
     }
-    async function updatePassword(event) { 
-        await setPassword(event.target.value); 
-    }
-
-    async function updateEmail(event) { 
-        await setEmail(event.target.value); 
+    async function updatePassword(event: FormEvent) { 
+        const target = event.target as HTMLInputElement; 
+        await setPassword(target.value); 
     }
 
-    async function handleSubmitButtonClicked(event) { 
+    async function updateEmail(event: FormEvent) { 
+        const target = event.target as HTMLInputElement; 
+        await setEmail(target.value); 
+    }
+
+    async function handleSubmitButtonClicked(event: FormEvent) { 
         event.preventDefault();
         try { 
             let signupResult = await signup({

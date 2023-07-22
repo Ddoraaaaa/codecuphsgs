@@ -3,28 +3,32 @@
 import { setUserInfo } from "@/session_storage_api/api";
 import {login} from "../../../backend_api/users"
 import assert from "assert";
-import {useState} from "react"
+import {FormEvent, useState} from "react"
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() { 
-    let [username, setUsername] = useState(null); 
-    let [password, setPassword] = useState(null); 
-    let [email, setEmail] = useState(null); 
+    let [username, setUsername] = useState<null | string>(null); 
+    let [password, setPassword] = useState<null | string>(null); 
+    let [email, setEmail] = useState<null | string>(null); 
     const router = useRouter(); 
 
-    async function updateUsername(event) { 
-        await setUsername(event.target.value); 
+    async function updateUsername(event: FormEvent) { 
+        const target = event.target as HTMLInputElement; 
+        await setUsername(target.value); 
     }
-    async function updatePassword(event) { 
-        await setPassword(event.target.value); 
-    }
-
-    async function updateEmail(event) { 
-        await setEmail(event.target.value); 
+    async function updatePassword(event: FormEvent) { 
+        const target = event.target as HTMLInputElement;
+        await setPassword(target.value); 
     }
 
-    async function handleSubmitButtonClicked(event) { 
+    async function updateEmail(event: FormEvent) { 
+        const target = event.target as HTMLInputElement;
+        await setEmail(target.value); 
+    }
+
+    async function handleSubmitButtonClicked(event: FormEvent) { 
         event.preventDefault();
+
         try { 
             let loginResult = await login({
                 username: username, 
@@ -50,8 +54,8 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="bg-white w-full h-full flex content-center justify-center items-center">
-            <div className="flex-col justify-center">
+        <div className="w-full h-full flex justify-center">
+            <div className="h-full flex-col justify-center">
                 <div className="text-center">
                     <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Login</h2>
                 </div>

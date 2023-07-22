@@ -13,8 +13,9 @@ export default function SectionTab({
 }: { 
     sectionTab: sectionTabI
 }): JSX.Element { 
-    const userInfo = getUserInfo(); 
+    const userInfo = getUserInfo();
     return (
+
         <div>
             {( !sectionTab.adminRequired || (userInfo && userInfo.userIsAdmin)) && <Link href={sectionTab.href} className="text-sm underline leading-6 text-gray-900">{sectionTab.title}</Link>}
         </div>

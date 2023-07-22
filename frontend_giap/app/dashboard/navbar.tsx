@@ -21,6 +21,7 @@ export default function NavBar({
                     </div>
                     <div className="hidden lg:flex lg:gap-x-12">
                         <Link href="/dashboard/contests" className="font-semibold leading-6 text-gray-950">Contests</Link>
+                        <Link href="/dashboard/games" className="font-semibold leading-6 text-gray-950">Games</Link>
                         <Link href="/dashboard/ranking" className="font-semibold leading-6 text-gray-950">Ranking</Link>
                     </div>
                 </div>

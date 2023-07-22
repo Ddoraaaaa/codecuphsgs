@@ -1,6 +1,6 @@
 "use client"; 
 
-import { contestInfoI } from "@/backend_api/contests"
+import { ContestInfoI } from "@/backend_api/contests"
 import { useState, useEffect, useContext } from "react"
 import Link from "next/link"
 import { displayMili } from "../helper"
@@ -10,7 +10,7 @@ import assert from "assert";
 function OngoingContest({
     contestInfo
 }: { 
-    contestInfo: contestInfoI
+    contestInfo: ContestInfoI
 }): JSX.Element {
     const [beforeEnd, setBeforeEnd] = useState(displayMili(contestInfo.endDate - (new Date())));
     useEffect(() => { 
@@ -23,7 +23,7 @@ function OngoingContest({
 
     return (
         <div className="min-w-0 flex gap-x-4">
-            <Link href={`/dashboard/contests/${contestInfo.contestId}`}
+            <Link href={`/dashboard/contest/${contestInfo.contestId}`}
                 className="text-sm underline font-semibold leading-6 text-gray-900">
                 {contestInfo.contestName}
             </Link>
@@ -40,15 +40,12 @@ export default function OngoingContests() {
             <div className="w-full">
                 {/* <h2>Ongoing Contests</h2> */}
                 <ul className={`divide-y divide-gray-100`}>
-                    {contestsInfo.map((contestInfo) => { 
-                        if(contestInfo.startDate > new Date() ||
-                            contestInfo.endDate < new Date()) { 
-                            return <></>; 
-                        }
-                        else { 
-                            return <OngoingContest contestInfo={contestInfo}></OngoingContest>; 
-                        }
-                    })}
+                    {
+                        contestsInfo
+                            .filter(contestsInfo => contestsInfo.startDate < new Date() && contestsInfo.endDate >= new Date())
+                            .map((contestInfo) => 
+                                <OngoingContest key={contestInfo.contestId} contestInfo={contestInfo}></OngoingContest>)
+                    }
                 </ul>
             </div>
         )

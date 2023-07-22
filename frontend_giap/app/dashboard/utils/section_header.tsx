@@ -10,10 +10,14 @@ export default function SectionHeader({
 }: { 
     sectionTabs: sectionTabI[]
 }): JSX.Element { 
+    for(const i in sectionTabs) { 
+        console.log("section tab: "); 
+        console.log(sectionTabs[i]); 
+    }
     return (
-        <header className="bg-white">
+        <header className="text-black">
             <nav className="flex items-center justify-start pr-6 gap-x-6" aria-label="Global">            
-                {sectionTabs.map(sectionTab => <SectionTab sectionTab={sectionTab}></SectionTab>)}
+                {sectionTabs.map((sectionTab, index) => <SectionTab key={index} sectionTab={sectionTab}></SectionTab>) /* using index as key, will need to be fixed later. */}
             </nav>
         </header>
     )

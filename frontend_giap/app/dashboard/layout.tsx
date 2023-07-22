@@ -11,9 +11,9 @@ export default function DashboardLayout({
 }) {  
     const userInfo = getUserInfo(); 
     return (
-        <div className="w-full bg-white">
+        <div className="w-full h-full bg-white">
             <NavBar userInfo={userInfo}></NavBar>
-            <div className="">
+            <div className="w-5/6 h-5/6 m-auto">
                 {children}
             </div>
         </div>
