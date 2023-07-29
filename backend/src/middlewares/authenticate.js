@@ -15,11 +15,11 @@ async function createSession(req, res, next) {
     }
 
     const user = username? await User.findOne({username}): await User.findOne({email})
-    if(!user) { 
+    if(!user) {
         return res.status(401).send({msg: "User not found"}); 
     }
 
-    if((await bcrypt.compare(password, user.password) == false)) { 
+    if((await bcrypt.compare(password, user.password)) == false) { 
         return res.status(401).send({
             msg: "Wrong password", 
         }); 
