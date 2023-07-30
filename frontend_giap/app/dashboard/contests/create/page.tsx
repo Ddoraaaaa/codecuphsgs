@@ -5,14 +5,24 @@ import { start } from 'repl';
 import ContestInfoForm from '../../utils/contestForm';
 import { create } from 'domain';
 import { createContest } from '@/backend_api/contests';
+import { useRouter } from 'next/navigation';
 
 export default function ContestCreatePage() { 
+    const router = useRouter();
 
-    function onSubmit(contestInfo: Object) { 
+    async function onSubmit(contestInfo: Object) { 
         console.log(contestInfo)
-        createContest(contestInfo).then(({success, msg}: {success: Boolean, msg: string}) => { 
+        const {success, msg} = await createContest(contestInfo); 
+        if(!success) { 
             alert(msg); 
-        })
+        }
+        else { 
+            try {
+                router.push("/dashboard/contests/upcoming"); 
+            } catch(e) { 
+                alert(e); 
+            }
+        }
     }
 
     return <ContestInfoForm contestInfo = {null} callback={onSubmit}></ContestInfoForm>

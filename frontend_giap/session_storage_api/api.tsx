@@ -1,5 +1,4 @@
 import { ContestDetailsI, ContestInfoI } from "@/backend_api/contests";
-import { useState } from "react";
 
 interface userInfoI { 
     userId: number, 
@@ -12,6 +11,9 @@ function setUserInfo(userInfo: userInfoI | null) {
 }
 
 function getUserInfo(): userInfoI | null { 
+    if(typeof window === "undefined" ) { 
+        return null; 
+    }
     let userInfoString = sessionStorage.getItem('userInfo'); 
     if(userInfoString == null) { 
         return null; 

@@ -2,9 +2,12 @@
 
 import { createGame } from "@/backend_api/games";
 import { assert } from "console";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 export default function CreateGamePage() {
+
+    const router = useRouter(); 
     
     const [name, setName] = useState(""); 
     const [statementURL, setStatementURL] = useState(""); 
@@ -37,7 +40,7 @@ export default function CreateGamePage() {
         ); 
 
         if(fetchResult.success) { 
-            alert("Game created!"); 
+            router.push("/dashboard/games/list"); 
         }
         else { 
             alert("Creating game failed. Error: " + fetchResult.msg); 

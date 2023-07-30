@@ -4,7 +4,7 @@ import { ContestInfoI } from "@/backend_api/contests"
 import { useState, useEffect, useContext } from "react"
 import Link from "next/link"
 import { displayMili } from "../helper"
-import { contestsInfoContext } from "../layout";
+import { ContestsInfoContext } from "../layout";
 import assert from "assert";
 
 function OngoingContest({
@@ -33,7 +33,7 @@ function OngoingContest({
 }
 
 export default function OngoingContests() { 
-    const contestsInfo = useContext(contestsInfoContext)
+    const contestsInfo = useContext(ContestsInfoContext)
     try {
         assert (contestsInfo != null); 
         return (

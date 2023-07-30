@@ -56,22 +56,29 @@ async function getGameInfo(
     gameInfo?: GameInfoI
 }> {
     try { 
-        const response = await fetch(`api/game/${gameId}`); 
-        const success = response.ok; 
-        const jsonResponse = await response.json(); 
-        const {msg, gameInfo} = jsonResponse; 
-        return ({
-            success, 
-            msg, 
-            ...(success && {
+        const response = await fetch(`/api/game/${gameId}`); 
+        console.log("ldsjfldsjkf")
+        if(response.ok) {
+            const jsonResponse = await response.json(); 
+            const {msg, game} = jsonResponse; 
+            console.log("ldsjfldsjkf. response: " + Object.keys(jsonResponse)); 
+            return ({
+                success: true, 
+                msg, 
                 gameInfo: {
-                    id: gameInfo.id, 
-                    name: gameInfo.name, 
-                    statementUrl: gameInfo.statementUrl, 
-                    renderUrl: gameInfo.renderUrl
+                    id: game.id, 
+                    name: game.name, 
+                    statementUrl: game.statementUrl, 
+                    renderUrl: game.renderUrl
                 }
+            }) 
+        }
+        else { 
+            return ({
+                success: false, 
+                msg: await response.text()
             })
-        }) 
+        }
     } catch(e) { 
         return { 
             success: false, 

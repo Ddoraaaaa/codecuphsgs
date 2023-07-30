@@ -32,7 +32,7 @@ const sectionTabs = [
     }
 ]
 
-const contestsInfoContext = createContext<ContestInfoI[] | null>(null); 
+const ContestsInfoContext = createContext<ContestInfoI[] | null>(null); 
 
 export default function ContestsLayout({
     children
@@ -69,13 +69,14 @@ export default function ContestsLayout({
     }, []); 
 
     return (
-        <contestsInfoContext.Provider value={contestsInfo}>
+        <ContestsInfoContext.Provider value={contestsInfo}>
             <SectionHeader sectionTabs={sectionTabs}></SectionHeader>
-            <div className="w-full text-sm p-6">{children}</div>
-        </contestsInfoContext.Provider>
+            {contestsInfo != null && <div className="w-full text-sm p-6">{children}</div>}
+            {contestsInfo == null && <div>Loading...</div>}
+        </ContestsInfoContext.Provider>
     )
 }
 
 export { 
-    contestsInfoContext
+    ContestsInfoContext
 }

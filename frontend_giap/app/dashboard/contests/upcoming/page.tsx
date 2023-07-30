@@ -5,7 +5,7 @@ import { useState, useEffect, useContext } from "react"
 import Link from "next/link"
 import { displayMili } from "../helper"
 import { error } from "console";
-import { contestsInfoContext } from "../layout";
+import { ContestsInfoContext } from "../layout";
 import assert from "assert";
 
 function UpcomingContest({
@@ -38,7 +38,7 @@ function UpcomingContest({
 }
 
 export default function UpcomingContests() { 
-    const contestsInfo = useContext(contestsInfoContext)
+    const contestsInfo = useContext(ContestsInfoContext)
     console.log("contestsInfo: "); 
     console.log(contestsInfo); 
     try {

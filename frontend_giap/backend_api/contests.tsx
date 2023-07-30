@@ -1,5 +1,6 @@
 import assert from 'assert';
 import { EnumType } from 'typescript';
+import { getGameInfo } from './games';
 
 
 enum ContestFormat {
@@ -127,13 +128,15 @@ async function getContestDetails(
             }
         }
 
+        console.log(contest); 
+
         const gameInfoResponse = await getGameInfo(contest.gameId); 
         console.log(gameInfoResponse); 
 
         if(!gameInfoResponse.success) { 
             return { 
                 success: false, 
-                msg: gameInfoResponse.msg
+                msg: "fetching game failed. " + gameInfoResponse.msg
             }
         }
 

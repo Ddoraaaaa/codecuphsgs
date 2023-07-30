@@ -13,11 +13,10 @@ export default function SectionTab({
 }: { 
     sectionTab: sectionTabI
 }): JSX.Element { 
-    const userInfo = getUserInfo();
     return (
 
-        <div>
-            {( !sectionTab.adminRequired || (userInfo && userInfo.userIsAdmin)) && <Link href={sectionTab.href} className="text-sm underline leading-6 text-gray-900">{sectionTab.title}</Link>}
+        <div className="h-full flex items-center justify-center hover:bg-gray-100 hover:border-b-2 hover:border-zinc-900">
+            <Link href={sectionTab.href} className="text-lg text-gray-900">{sectionTab.title}</Link>
         </div>
     )
 }
