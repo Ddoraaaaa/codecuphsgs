@@ -4,8 +4,8 @@ const submissionSchema = new Schema ({
     id: {type: Number}, 
     userId: {type: Number}, 
     contestId: {type: String}, 
-    submissionDate: {type: Date}, 
-    language: {type: String}, 
+    submissionDate: {type: Date, default: () => new Date()}, 
+    language: {type: String, default: "cpp"}, 
     sourceUrl: {type: String}, 
 })
 
@@ -18,6 +18,6 @@ submissionSchema.methods.toJson = function () {
     }
 }
 
-const Submission = model('Submission', submissionSchema); 
+const SubmissionModel = model('Submission', submissionSchema); 
 
-export default Submission; 
+export default SubmissionModel; 

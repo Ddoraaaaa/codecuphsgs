@@ -22,6 +22,7 @@ async function createGame(req, res, next) {
 }
 
 function gameInfoRestrictedView(game) { 
+    console.log(game); 
     return { 
         id: game.id, 
         name: game.name, 
@@ -77,12 +78,14 @@ async function getGame(req, res, next) {
     }
     
     if(!req.session.userId || !req.session.isAdmin) { 
+        console.log(gameInfoRestrictedView(game)); 
         return res.status(200).send({
             game: gameInfoRestrictedView(game), 
             msg: "fetched game"
         }); 
     }
     else { 
+        console.log(gameInfoUnrestrictedView(game))
         return res.status(200).send({
             game: gameInfoUnrestrictedView(game), 
             msg: "fetched game"
