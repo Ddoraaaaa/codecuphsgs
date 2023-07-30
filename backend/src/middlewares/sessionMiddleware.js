@@ -6,7 +6,7 @@ const store = new MongoDBStore({
     collection: "sessions"
 }); 
 var sessionMiddleware = session({
-    secret: 'This is a secret',
+    secret: "This is a secret",
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
     },
