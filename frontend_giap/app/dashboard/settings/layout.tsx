@@ -2,13 +2,14 @@
 
 import { ReactNode } from "react";
 import Headers from "./headers";
-import SectionHeader from "../section_header";
+import SectionHeader from "../utils/section_header";
 import { title } from "process";
 import { useEffect, useState } from "react";
 import { createContext } from "react";
-import { contestInfoI, getAllContests } from "@/backend_api/contests";
+import { ContestInfoI, getAllContests } from "@/backend_api/contests";
 import assert from "assert";
-import Section from "../section";
+import BodyCon from "../section";
+import SubsectionBodyContainer from "../utils/subsectionBodyContainer";
 
 const sectionTabs = [
     {
@@ -26,11 +27,11 @@ export default function SettingsLayout({
 
    
     return (
-        <div className="w-5/6 h-5/6 m-auto">
+        <div className="w-full h-full">
             <SectionHeader sectionTabs={sectionTabs}></SectionHeader>
-            <Section>
+            <SubsectionBodyContainer>
                 {children}
-            </Section>
+            </SubsectionBodyContainer>
         </div>
     )
 }

@@ -1,69 +1,80 @@
-import express from "express";
-import mongoose from "mongoose";
-import cors from "cors"
-
-// import sessionMiddleware from "./middlewares/sessionMiddleware";
-import session from "express-session";
-const MongoDBStore = require("connect-mongodb-session")(session);
-
-import upload from "./middlewares/upload";
-import { userRouter } from "./routers/user.router";
-import { contestRouter } from "./routers/contest.router";
-import { gameRouter } from "./routers/game.router";
-import sourceCodeUpload from "./middlewares/upload";
-
+const mongoose = require("mongoose"); 
 mongoose.set('strictQuery', true);
 mongoose.connect('mongodb://localhost:27017/codecup')
 
-const app = express();
+import express from "express";
+import cors from "cors"
 
-app.use(cors()); 
+import sessionMiddleware from "./middlewares/sessionMiddleware";
 
-const store = new MongoDBStore({
-  uri: "mongodb://localhost:27017/codecup",
-  collection: "sessions"
-}); 
-var sessionMiddleware = session({
-  secret: 'This is a secret',
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
-  },
-  store: store,
-  // Boilerplate options, see:
-  // * https://www.npmjs.com/package/express-session#resave
-  // * https://www.npmjs.com/package/express-session#saveuninitialized
-  resave: true,
-  saveUninitialized: true
-})
+import { userRouter } from "./routers/user.router";
+import { gameRouter } from "./routers/game.router";
+import { ContestModel } from "./models/contest.model";
+import ContestController from "./controllers/contest.controller"
+import ContestService from "./services/contest.service";
+import createContestRouter from "./routers/contest.router";
+import ContestStateMachineFactory from "./judge/contest_state_machine/factory";
+import ContestPostEndingProcessor from "./judge/contest_postending_processor";
+import JudgeAPIWrapper from "./judge/mockJudgeAPIWrapper";
+import SubmissionModel from "./models/submission.model";
+import SubmissionService from "./services/submission.service";
 
-app.use(sessionMiddleware);
+const contestDBService = new ContestService(ContestModel); 
+const submissionDBService = new SubmissionService(SubmissionModel); 
 
-app.use((req, res, next) => { 
-  console.log(req.session); 
-  return next(); 
-})
+const contestController = new ContestController(contestDBService, submissionDBService); 
 
-var bodyParser = require('body-parser');
+const contestRouter = createContestRouter(contestController); 
 
-// for parsing application/json
-app.use(bodyParser.json()); 
+function startServer() { 
+    const app = express();
 
-// for parsing application/xwww-
-app.use(bodyParser.urlencoded({ extended: true })); 
-//form-urlencoded
+    app.use(cors()); 
 
-// multpart-formdata is handle in endpoint function?
+    app.use(sessionMiddleware);
 
-app.use(express.static('public'));
+    /*
+    app.use((req, res, next) => { 
+    console.log(req.session); 
+    return next(); 
+    })
+    */
 
-app.use(userRouter); 
-app.use(contestRouter); 
-app.use(gameRouter); 
+    app.use((req, res, next) => { 
+        console.log("debuggin"); 
+        next(); 
+    })
 
-app.get("/", (req, res, next) => { 
-  return res.status(200).send("server reached"); 
-})
+    var bodyParser = require('body-parser');
 
-app.listen(5000, () => {
-    console.log("tao da song");
-})
+    // // for parsing application/json
+    app.use(bodyParser.json()); 
+
+    // // for parsing application/xwww-
+    app.use(bodyParser.urlencoded({ extended: true })); 
+    // //form-urlencoded
+
+    // multpart-formdata is handled in endpoint function?
+
+    app.use(express.static('public'));
+
+    app.use(userRouter); 
+    app.use(contestRouter); 
+    app.use(gameRouter); 
+
+    app.listen(5000, () => { 
+        console.log("server on"); 
+    })
+
+    return app; 
+}
+
+function startContestPostEndingProcessor() { 
+    const judgeAPIWrapper = new JudgeAPIWrapper(); 
+    const contestStateMachineFactory = new ContestStateMachineFactory(contestDBService);
+    const contestPostEndingProcessor = new ContestPostEndingProcessor(contestStateMachineFactory, judgeAPIWrapper, contestDBService); 
+    contestPostEndingProcessor.start(); 
+}
+
+startServer(); 
+startContestPostEndingProcessor(); 

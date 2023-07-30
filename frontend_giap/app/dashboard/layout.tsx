@@ -1,7 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { getUserInfo, userInfoI } from "@/session_storage_api/api";
 import NavBar from "./navbar";
-import { getUserInfo } from "@/session_storage_api/api";
+import BodyContainer from "./bodyContainer";
+// import { getUserInfo } from "@/session_storage_api/api";
 import { useRouter } from "next/router";
 
 export default function DashboardLayout({
@@ -9,13 +12,17 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {  
-    const userInfo = getUserInfo(); 
-    return (
-        <div className="w-full bg-white">
-            <NavBar userInfo={userInfo}></NavBar>
-            <div className="">
-                {children}
-            </div>
-        </div>
+  // sessionStorage only available after mounting -> useEffect to getUserInfo
+  const [userInfo, setUserInfo] = useState<null | userInfoI>(null); 
+  useEffect(() => { 
+    setUserInfo(getUserInfo()); 
+  }, [])
+  return (
+      <div className="w-full h-full bg-white">
+          <NavBar userInfo={userInfo}></NavBar>
+          <BodyContainer>
+              {children}
+          </BodyContainer>
+      </div>
   )
 }

@@ -5,6 +5,8 @@ async function createGame(req, res, next) {
         return res.status(401).send({msg: "User is not admin"}); 
     }
 
+    console.log(req.body); 
+
     const game = await gameModel.create({
         id: await gameModel.count() + 1, 
         name: req.body.name, 
@@ -20,6 +22,7 @@ async function createGame(req, res, next) {
 }
 
 function gameInfoRestrictedView(game) { 
+    console.log(game); 
     return { 
         id: game.id, 
         name: game.name, 
@@ -30,12 +33,29 @@ function gameInfoRestrictedView(game) {
 }
 
 function gameInfoUnrestrictedView(game) { 
+    console.log(game); 
     return { 
         id: game.id, 
         name: game.name, 
         statementUrl: game.statementUrl, 
         judgeUrl: game.judgeUrl, 
         renderUrl: game.renderUrl
+    }
+}
+
+async function getAllGames(req, res, next) { 
+    const games = await gameModel.find(); 
+    if(!req.session.userId || !req.session.isAdmin) { 
+        return res.status(200).send({
+            games: games.map(game => gameInfoRestrictedView(game)), 
+            msg: "fetched game. user not admin"
+        }); 
+    }
+    else { 
+        return res.status(200).send({
+            games: games.map(game => gameInfoUnrestrictedView(game)), 
+            msg: "fetched game"
+        }); 
     }
 }
 
@@ -58,12 +78,14 @@ async function getGame(req, res, next) {
     }
     
     if(!req.session.userId || !req.session.isAdmin) { 
+        console.log(gameInfoRestrictedView(game)); 
         return res.status(200).send({
             game: gameInfoRestrictedView(game), 
             msg: "fetched game"
         }); 
     }
     else { 
+        console.log(gameInfoUnrestrictedView(game))
         return res.status(200).send({
             game: gameInfoUnrestrictedView(game), 
             msg: "fetched game"
@@ -73,6 +95,7 @@ async function getGame(req, res, next) {
 }
 
 export { 
+    getAllGames, 
     getGame,
     createGame, 
 }

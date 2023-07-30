@@ -1,22 +1,21 @@
 "use client"; 
 
-import { contestInfoI } from "@/backend_api/contests"
+import { ContestInfoI } from "@/backend_api/contests"
 import { useState, useEffect, useContext } from "react"
 import Link from "next/link"
 import { displayMili } from "../helper"
 import { error } from "console";
-import { contestsInfoContext } from "../layout";
+import { ContestsInfoContext } from "../layout";
 import assert from "assert";
 
 function PastContest({
     contestInfo
 }: { 
-    contestInfo: contestInfoI
+    contestInfo: ContestInfoI
 }): JSX.Element {
-
     return (
         <div className="min-w-0 flex gap-x-4">
-            <Link href={`/dashboard/contests/${contestInfo.contestId}`}
+            <Link href={`/dashboard/contest/${contestInfo.contestId}`}
                 className="text-sm underline font-semibold leading-6 text-gray-900">
                 {contestInfo.contestName}
             </Link>
@@ -26,7 +25,7 @@ function PastContest({
 }
 
 export default function PastContests() { 
-    const contestsInfo = useContext(contestsInfoContext)
+    const contestsInfo = useContext(ContestsInfoContext)
     console.log("contestsInfo: "); 
     console.log(contestsInfo); 
     try {
@@ -36,14 +35,12 @@ export default function PastContests() {
             <div className="w-full">
                 {/* <h2>Past Contests</h2> */}
                 <ul className={`divide-y divide-gray-100`}>
-                    {contestsInfo.map((contestInfo) => { 
-                        if(contestInfo.endDate >= new Date()) { 
-                            return <></>; 
-                        }
-                        else { 
-                            return <PastContest contestInfo={contestInfo}></PastContest>; 
-                        }
-                    })}
+                    {
+                        contestsInfo
+                            .filter(contestsInfo => contestsInfo.endDate < new Date())
+                            .map((contestInfo) => 
+                                <PastContest key={contestInfo.contestId} contestInfo={contestInfo}></PastContest>)
+                    }
                 </ul>
             </div>
         )

@@ -1,17 +1,17 @@
 "use client"; 
 
-import { contestInfoI } from "@/backend_api/contests"
+import { ContestInfoI } from "@/backend_api/contests"
 import { useState, useEffect, useContext } from "react"
 import Link from "next/link"
 import { displayMili } from "../helper"
 import { error } from "console";
-import { contestsInfoContext } from "../layout";
+import { ContestsInfoContext } from "../layout";
 import assert from "assert";
 
 function UpcomingContest({
     contestInfo
 }: { 
-    contestInfo: contestInfoI
+    contestInfo: ContestInfoI
 }): JSX.Element {
     const [beforeStart, setBeforeStart] = useState(displayMili(contestInfo.startDate - (new Date())));
     console.log("contestInfo: ")
@@ -28,7 +28,7 @@ function UpcomingContest({
 
     return (
         <div className="min-w-0 flex gap-x-4">
-            <Link href={`/dashboard/contests/${contestInfo.contestId}`}
+            <Link href={`/dashboard/contest/${contestInfo.contestId}`}
                 className="text-sm underline font-semibold leading-6 text-gray-900">
                 {contestInfo.contestName}
             </Link>
@@ -38,7 +38,7 @@ function UpcomingContest({
 }
 
 export default function UpcomingContests() { 
-    const contestsInfo = useContext(contestsInfoContext)
+    const contestsInfo = useContext(ContestsInfoContext)
     console.log("contestsInfo: "); 
     console.log(contestsInfo); 
     try {
@@ -48,14 +48,12 @@ export default function UpcomingContests() {
             <div className="w-full">
                 {/* <h2>Upcoming Contests</h2> */}
                 <ul className={`divide-y divide-gray-100`}>
-                    {contestsInfo.map((contestInfo) => { 
-                        if(contestInfo.startDate < new Date()) { 
-                            return <></>; 
-                        }
-                        else { 
-                            return <UpcomingContest contestInfo={contestInfo}></UpcomingContest>; 
-                        }
-                    })}
+                    {
+                        contestsInfo
+                            .filter(contestsInfo => contestsInfo.startDate >= new Date())
+                            .map((contestInfo) => 
+                                <UpcomingContest key={contestInfo.contestId} contestInfo={contestInfo}></UpcomingContest>)
+                    }
                 </ul>
             </div>
         )

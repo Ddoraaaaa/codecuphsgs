@@ -123,21 +123,20 @@ async function login({
         return { 
             success, 
             msg, 
-            userInfo: { 
+            ...(success && {userInfo: { 
                 userId: jsonResponse.user.id, 
                 username: jsonResponse.user.username, 
                 userIsAdmin: jsonResponse.user.isAdmin
-            }
+            }})
         }
     }
     catch(error) {
         alert(error); 
+        return { 
+            success: false, 
+            msg: "login failed"
+        }
     }
-
-    return { 
-        success: true, 
-        msg: "nice"
-    }; 
 
 }
 

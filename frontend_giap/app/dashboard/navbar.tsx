@@ -4,33 +4,33 @@ import { userInfoI } from "@/session_storage_api/api";
 import hsgs_logo from "../../public/logo.png"
 import Image from "next/image";
 import Link from "next/link";
+import NavBarSection from "./navbarSection";
 export default function NavBar({
     userInfo
 }: { 
     userInfo: userInfoI | null
 }): JSX.Element { 
     return (
-        <header className="bg-white">
-            <nav className="flex items-center justify-between" aria-label="Global">
-                <div className="flex justify-start items-center">
-                    <div className="flex">
-                        <Link href="/dashboard" className="">
-                            <span className="sr-only">Hsgs Code Cup</span>
-                            <Image className="h-24 w-auto" src={hsgs_logo} alt=""></Image>
-                        </Link>
-                    </div>
-                    <div className="hidden lg:flex lg:gap-x-12">
-                        <Link href="/dashboard/contests" className="font-semibold leading-6 text-gray-950">Contests</Link>
-                        <Link href="/dashboard/ranking" className="font-semibold leading-6 text-gray-950">Ranking</Link>
+        <header className=" h-16 w-full mb-2 bg-black text-white">
+            <nav className="h-full w-full flex items-center justify-between" aria-label="Global">
+                <div className="h-full w-full flex justify-start items-center">
+                    <NavBarSection href="/dashboard">
+                        <span className="sr-only">Hsgs Code Cup</span>
+                        <Image className="h-24 w-auto" src={hsgs_logo} alt=""></Image>
+                    </NavBarSection>
+                    <div className="h-full w-full flex">
+                        <NavBarSection href="/dashboard/contests" >Contests</NavBarSection>
+                        <NavBarSection href="/dashboard/games">Games</NavBarSection>
+                        {/* <NavBarSection href="/dashboard/ranking">Ranking</NavBarSection> */}
                     </div>
                 </div>
-                <div className="hidden pr-6 lg:flex lg:flex-1 lg:justify-end gap-x-12">
+                <div className="w-full h-full flex justify-end">
                     {(userInfo != null && 
-                        <Link href="/dashboard/settings" className="font-semibold leading-6 text-gray-950">Settings</Link>)}
+                        <NavBarSection href="/dashboard/settings">Settings</NavBarSection>)}
                     {(userInfo != null && 
-                        <Link href="/authentication/logout" className="font-semibold leading-6 text-gray-950">Log out</Link>)}
+                        <NavBarSection href="/authentication/logout">Log out</NavBarSection>)}
                     {(userInfo == null && 
-                        <Link href="/authentication/login" className="font-semibold leading-6 text-gray-950">Log in</Link>)}
+                        <NavBarSection href="/authentication/login">Log in</NavBarSection>)}
                 </div>
             </nav>
         </header>

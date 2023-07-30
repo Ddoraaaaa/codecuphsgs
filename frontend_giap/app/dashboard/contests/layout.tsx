@@ -2,11 +2,11 @@
 
 import { ReactNode } from "react";
 import Headers from "./headers";
-import SectionHeader from "../section_header";
+import SectionHeader from "../utils/section_header";
 import { title } from "process";
 import { useEffect, useState } from "react";
 import { createContext } from "react";
-import { contestInfoI, getAllContests } from "@/backend_api/contests";
+import { ContestInfoI, getAllContests } from "@/backend_api/contests";
 import assert from "assert";
 
 const sectionTabs = [
@@ -32,7 +32,7 @@ const sectionTabs = [
     }
 ]
 
-const contestsInfoContext = createContext<contestInfoI[] | null>(null); 
+const ContestsInfoContext = createContext<ContestInfoI[] | null>(null); 
 
 export default function ContestsLayout({
     children
@@ -42,7 +42,7 @@ export default function ContestsLayout({
 
     /* put the contestsInfo here to reduce the number of fetch request. 
     Persist until rerender contest page / reload */
-    const [contestsInfo, setContestsInfo] = useState<contestInfoI[] | null> (null); 
+    const [contestsInfo, setContestsInfo] = useState<ContestInfoI[] | null> (null); 
 
     async function refetchContestsInfo() { 
         try { 
@@ -69,15 +69,14 @@ export default function ContestsLayout({
     }, []); 
 
     return (
-        <contestsInfoContext.Provider value={contestsInfo}>
-            <div className="w-5/6 h-5/6 m-auto">
-                <SectionHeader sectionTabs={sectionTabs}></SectionHeader>
-                <div className="w-full text-sm p-6">{children}</div>
-            </div>
-        </contestsInfoContext.Provider>
+        <ContestsInfoContext.Provider value={contestsInfo}>
+            <SectionHeader sectionTabs={sectionTabs}></SectionHeader>
+            {contestsInfo != null && <div className="w-full text-sm p-6">{children}</div>}
+            {contestsInfo == null && <div>Loading...</div>}
+        </ContestsInfoContext.Provider>
     )
 }
 
 export { 
-    contestsInfoContext
+    ContestsInfoContext
 }

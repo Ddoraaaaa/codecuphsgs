@@ -8,5 +8,5 @@ export default function DashboardPage() {
     if(!userInfo) { 
         redirect("/authentication/login"); 
     }
-    return <div>Home page</div>; 
+    redirect("/dashboard/home"); 
 }
