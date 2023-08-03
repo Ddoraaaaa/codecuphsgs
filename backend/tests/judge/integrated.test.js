@@ -6,7 +6,7 @@ import AllVsAllStateMachine from "../../src/judge/contest_state_machine/all_vs_a
 import JudgeAPIWrapper from "../../src/judge/judgeAPIWrapper";
 import SubmissionService from "../../src/services/submission.service";
 
-describe("Integrated test: Judge API using mock database & mock API", () => { 
+describe("Integrated test: Automatic judging system", () => { 
     let SubmissionModel; 
 
     beforeAll(async() => { 
