@@ -1,10 +1,10 @@
 import EndedContestProcessor from "../../src/judge/ended_contest_processor";
 
 const mongoose = require("mongoose");
-import ContestService from "../../src/services/contest.service";
+import ContestService from "../../../backend/src/services/contest.service";
 import AllVsAllStateMachine from "../../src/judge/contest_state_machine/all_vs_all"
 import JudgeAPIWrapper from "../../src/judge/judgeAPIWrapper";
-import SubmissionService from "../../src/services/submission.service";
+import SubmissionService from "../../../backend/src/services/submission.service";
 
 describe("Integrated test: Judge API using mock database & mock API", () => { 
     let SubmissionModel; 
@@ -13,7 +13,7 @@ describe("Integrated test: Judge API using mock database & mock API", () => {
         mongoose.set('strictQuery', true);
         await mongoose.disconnect();
         await mongoose.connect('mongodb://localhost:27017/codecup_test');
-        SubmissionModel = require("../../src/models/submission.model").default; 
+        SubmissionModel = require("../../../backend/src/models/submission.model").default; 
     })
 
     beforeEach(async () => {
