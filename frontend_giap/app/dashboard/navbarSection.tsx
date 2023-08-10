@@ -11,7 +11,7 @@ export default function NavBarSection({
     children: React.ReactNode
 }): JSX.Element { 
     return (
-        <div className="h-full w-1/6 flex flex-row justify-center items-center  leading-6 hover:font-semibold hover:underline hover:underline-offset-8">
+        <div className="h-20 w-full flex flex-row justify-center items-center  leading-6 hover:font-semibold hover:underline hover:underline-offset-8">
             <Link href={href}
             >
                 {children}

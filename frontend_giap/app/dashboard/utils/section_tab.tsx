@@ -1,6 +1,7 @@
 
 import { getUserInfo } from "@/session_storage_api/api"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 interface sectionTabI{ 
     href: string, 
@@ -10,14 +11,25 @@ interface sectionTabI{
 
 export default function SectionTab({ 
     sectionTab, 
+    selected, 
+    setSelectedThis
 }: { 
-    sectionTab: sectionTabI
+    sectionTab: sectionTabI, 
+    selected: boolean, 
+    setSelectedThis: Function
 }): JSX.Element { 
+    const router = useRouter(); 
+    const onButtonClicked = () => { 
+        console.log(sectionTab.href)
+        setSelectedThis(); 
+        router.push(sectionTab.href); 
+    }
     return (
-
-        <div className="h-full flex items-center justify-center hover:bg-gray-100 hover:border-b-2 hover:border-zinc-900">
-            <Link href={sectionTab.href} className="text-lg text-gray-900">{sectionTab.title}</Link>
-        </div>
+        <button 
+            onClick={onButtonClicked} 
+            className={`group/sectionTab h-full flex items-center justify-center ${selected? "bg-white rounded-t-md": "bg-gray-400 hover:bg-gray-200"}  text-sm`}>
+                {sectionTab.title}
+        </button>
     )
 }
 

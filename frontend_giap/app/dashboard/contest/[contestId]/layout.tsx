@@ -3,6 +3,7 @@
 import { ReactNode } from "react";
 import SectionHeader from "../../utils/section_header";
 import { useParams, usePathname } from "next/navigation";
+import SubsectionBodyContainer from "../../utils/subsectionBodyContainer";
 export default function ContestDetailsLayout({
     children
 }: { 
@@ -30,8 +31,8 @@ export default function ContestDetailsLayout({
             adminRequired: false, 
         }, 
         { 
-            title: "Submissions", 
-            href: path + "/submissions",
+            title: "Results", 
+            href: path + "/results",
             adminRequired: false, 
         }, 
         { 
@@ -44,7 +45,7 @@ export default function ContestDetailsLayout({
     return (
         <div className="w-full">
             <SectionHeader sectionTabs={sectionTabs}></SectionHeader>
-            {children}
+            <SubsectionBodyContainer>{children}</SubsectionBodyContainer>
         </div>
     )
 }

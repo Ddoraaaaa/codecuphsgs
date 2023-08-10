@@ -204,6 +204,15 @@ async function submitCode({
     }
 }
 
+async function getResult(contestId:Number) {
+    const response = await fetch(`/api/contest/${contestId}/results`, 
+    { 
+        method: "GET"
+    })
+    const body = await response.json(); 
+    return body; 
+}
+
 export type {  
     ContestInfoI, 
     ContestDetailsI
@@ -215,5 +224,6 @@ export {
     getAllContests, 
     getContestDetails, 
     submitCode, 
-    createContest
+    createContest, 
+    getResult
 }

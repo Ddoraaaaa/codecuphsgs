@@ -14,17 +14,13 @@ function UpcomingContest({
     contestInfo: ContestInfoI
 }): JSX.Element {
     const [beforeStart, setBeforeStart] = useState(displayMili(contestInfo.startDate - (new Date())));
-    console.log("contestInfo: ")
-    console.log(contestInfo)
     useEffect(() => { 
-        console.log(typeof(contestInfo.startDate)); 
-        console.log(typeof (new Date())); 
         const interval = setInterval(() => {
             setBeforeStart(displayMili(contestInfo.startDate - new Date()));
         }, 1000);
     
         return () => clearInterval(interval);
-    })
+    }, [])
 
     return (
         <div className="min-w-0 flex gap-x-4">

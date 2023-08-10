@@ -18,7 +18,7 @@ export default function DashboardLayout({
     setUserInfo(getUserInfo()); 
   }, [])
   return (
-      <div className="w-full h-full bg-white">
+      <div className="w-full h-full bg-white grid grid-cols-[6vw_94vw]">
           <NavBar userInfo={userInfo}></NavBar>
           <BodyContainer>
               {children}
