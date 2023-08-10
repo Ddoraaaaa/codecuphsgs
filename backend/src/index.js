@@ -1,18 +1,20 @@
 
+import dotenv from "dotenv"; 
+
 console.log("NODE_ENV: " + process.env.NODE_ENV)
 
+if(process.env.NODE_ENV === "dev") {
+    dotenv.config({path: '.env.' + process.env.NODE_ENV})
+}
 
-require('dotenv').config({path: '.env.' + process.env.NODE_ENV})
-
-const mongoose = require("mongoose"); 
-
+import mongoose from "mongoose"; 
 mongoose.set('strictQuery', true);
 mongoose.connect(process.env.MONGODB_URI)
 
 import express from "express";
 import cors from "cors"
 
-import sessionMiddleware from "./middlewares/sessionMiddleware";
+import sessionMiddleware from "./middlewares/sessionMiddleware.js";
 
 import { userRouter } from "./routers/user.router";
 import { gameRouter } from "./routers/game.router";
