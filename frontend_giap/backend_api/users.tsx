@@ -9,7 +9,7 @@ async function logout(): Promise<{
         // why is it not working? apparently await can escape try / catch block
         let response = await fetch("/api/logout", 
             { 
-                method: "GET", 
+                method: "POST", 
             }
         ); 
 
