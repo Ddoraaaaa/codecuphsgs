@@ -39,6 +39,7 @@ async function createSession(req, res, next) {
 }
 
 async function endSession(req, res, next) { 
+    console.log("recieved log out request"); 
     if(!req.session.id) { 
         return res.status(401).send({msg:"not logged in"})
     }

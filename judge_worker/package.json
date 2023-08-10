@@ -1,0 +1,11 @@
+{
+  "name": "codecup_hsgs_judge_worker",
+  "version": "1.0.0",
+  "description": "background worker that fetches contest data and interacts with judge",
+  "main": "index.js",
+  "scripts": {
+    "test": "cross-env NODE_ENV=test jest --detectOpenHandles --testTimeout=5000"
+  },
+  "author": "Hoang Giap Vu (hoanggiapvuvhg@gmail.com)",
+  "license": "MIT"
+}

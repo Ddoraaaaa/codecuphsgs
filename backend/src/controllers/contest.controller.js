@@ -53,6 +53,7 @@ export default class ContestController {
 
     async getContest(req, res, next) { 
         let contestId = req.params.contestId; // bug: params, not param
+        console.log(req.params)
         console.log(contestId)
 
         if(contestId == null) { 
@@ -60,7 +61,7 @@ export default class ContestController {
         }
 
 
-        // try {
+        try {
             console.log(this); 
             let contest = await this.#contestService.getContest(contestId); 
 
@@ -83,11 +84,12 @@ export default class ContestController {
                 msg: "Successful", 
                 contest
             })
-        // } catch(e) { 
-        //     return res.status(401).send({
-        //         msg: "Server Error " + e  
-        //     }); 
-        // }
+        } catch(e) { 
+            console.log("server error" + e)
+            return res.status(401).send({
+                msg: "Server Error " + e  
+            }); 
+        }
     }
 
     async deleteContest(req, res, next) { 
@@ -126,10 +128,11 @@ export default class ContestController {
 
         try {
             sourceCodeUpload(req, res, (error) => { 
-                if (error instanceof multer.MulterError) {
-                    throw(error); 
-                    return res.status(200).send({msg: "Server error"}); 
-                } else if (error) {
+                // if (error instanceof multer.MulterError) {
+                //     throw(error); 
+                //     return res.status(200).send({msg: "Server error"}); 
+                // } else 
+                if (error) {
                     console.error("errorOR: " + erroror); 
                     throw(error); 
                     return res.status(200).send({msg: "Server error"}); 
@@ -150,6 +153,16 @@ export default class ContestController {
         } catch(e) { 
             return res.status(401).send({msg: "Server Error: " + e});
         }
+    }
+
+    async getContestResultss(req, res, next) { 
+        const contestId = req.params.contestId; 
+        if(!contestId) { 
+            return res.status(401).send({msg: "Missing contest id"}); 
+        }
+
+        const results = await this.#contestService.getContestResults(contestId); 
+        return res.status(200).send({results}); 
     }
 
     static #restrictedView(contest) { 

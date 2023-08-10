@@ -6,7 +6,7 @@ export default class SubmissionService {
     }
 
     async getSubmission(submissionId) { 
-        return await this.#submissionModel.findOne({id: submissionId}).toObject(); 
+        return (await this.#submissionModel.findOne({id: submissionId})).toObject(); 
     }
 
     async createSubmission(contestId, userId, sourceUrl) { 
@@ -17,6 +17,7 @@ export default class SubmissionService {
             userId, 
             sourceUrl
         })
+        console.log("submission id: " + submissionId + submissionDocument.id)
         return submissionDocument.toObject();  
     }
 }
