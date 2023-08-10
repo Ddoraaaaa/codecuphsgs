@@ -2,7 +2,7 @@ import session from "express-session";
 const MongoDBStore = require("connect-mongodb-session")(session);
 
 const store = new MongoDBStore({
-    uri: "mongodb://localhost:27017/codecup",
+    uri: process.env.MONGODB_URI,
     collection: "sessions"
 }); 
 var sessionMiddleware = session({
