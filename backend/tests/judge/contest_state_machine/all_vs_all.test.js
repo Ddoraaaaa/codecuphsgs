@@ -47,7 +47,7 @@ describe("Testign All vs All State Machine with mock MongoDB database & real jud
         // while(await allVsAllStateMachine.hasNextUnjudgedMatch()) { 
         //     console.log(await allVsAllStateMachine.yieldNextUnjudgedMatch()); 
         // }
-        expect(await contestService.getContestResult(1)).toBe(`{"matches":{"1":{"matchId":1,"player1":"1","player2":"2","winner":"1","logUrl":"dummy url"}}}`); 
+        expect(await contestService.getContestResults(1)).toBe(`{"matches":{"1":{"matchId":1,"player1":"1","player2":"2","winner":"1","logUrl":"dummy url"}}}`); 
     }); 
 
     afterAll(async() => { 

@@ -14,7 +14,7 @@ export default class AllVsAllStateMachine {
     async init() { 
         //restore cached data about the contest from the database
         this.#contest = await this.#contestDBService.getContest(this.#contest.id); 
-        // console.log("fetched contest: " + this.#contest); 
+        console.log("fetched contest: " + this.#contest.id); 
         this.#restoreCachedState(); 
         this.#restoreCachedResult(); 
 
@@ -24,10 +24,13 @@ export default class AllVsAllStateMachine {
     }
 
     hasNextUnjudgedMatch() { 
+        console.log("finding next match")
         return this.#findClosestUnjudgedMatch() != null; 
     }
 
     yieldNextUnjudgedMatch() { 
+
+        console.log("yielding next match" + this.#contest.id)
         const match = this.#findAndSkipClosestUnjudgedMatch(); 
         return { 
             matchId: match.matchId, 
@@ -79,9 +82,16 @@ export default class AllVsAllStateMachine {
             
             const players = this.#currentState.players; 
             this.#currentState.matchCounter = 0; 
+
+            console.log("adding match")
+
             for(let i = 0; i < players.length; i++) { 
                 for(let j = i + 1; j < players.length; j++) {
                     this.#currentState.matchCounter++; 
+
+                    console.log("new match")
+
+                    
                     this.#currentState.matches[this.#currentState.matchCounter] = {
                         matchId: this.#currentState.matchCounter, 
                         player1: players[i], 
@@ -109,13 +119,17 @@ export default class AllVsAllStateMachine {
     }
 
     #findClosestUnjudgedMatch() { 
+        console.log(this.#currentState.matches)
         while(this.#currentState.currentMatchPointer <= this.#currentState.matchCounter) {
             const match = this.#currentState.matches[this.#currentState.currentMatchPointer]; 
             if(match.winner == null || match.winner == undefined) { 
+                console.log("found match"); 
                 return match; 
             }
             this.#currentState.currentMatchPointer++; 
         }
+
+        console.log("not found amtch")
         return null; 
     }
 
@@ -124,6 +138,6 @@ export default class AllVsAllStateMachine {
     }
 
     async #writeCurrentResult() { 
-        await this.#contestDBService.setContestResult(this.#contest.id, JSON.stringify(this.#result)); 
+        await this.#contestDBService.setContestResults(this.#contest.id, JSON.stringify(this.#result)); 
     }
 }

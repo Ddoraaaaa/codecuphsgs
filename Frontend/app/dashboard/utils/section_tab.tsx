@@ -27,7 +27,7 @@ export default function SectionTab({
     return (
         <button 
             onClick={onButtonClicked} 
-            className={`group/sectionTab h-full flex items-center justify-center ${selected? "bg-white rounded-t-md": "bg-gray-400 hover:bg-gray-200"}  text-sm`}>
+            className={`group/sectionTab h-full flex items-center justify-center ${selected? "bg-white rounded-t-md": "bg-gray-400 hover:bg-gray-200 hover:rounded-t-md"}  text-sm`}>
                 {sectionTab.title}
         </button>
     )

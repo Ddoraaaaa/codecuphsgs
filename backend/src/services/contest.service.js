@@ -79,12 +79,13 @@ export default class ContestService {
         }
     }
 
-    async getContestResult(contestId) { 
+    async getContestResults(contestId) { 
+        console.log(contestId); 
         const contest = await this.#contestModel.findOne({id: contestId}); 
         return contest.result; 
     }
 
-    async setContestResult(contestId, result) { 
+    async setContestResults(contestId, result) { 
         try {
             const contest = await this.#contestModel.findOne({id: contestId})
             contest.result = result; 

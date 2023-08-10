@@ -28,12 +28,15 @@ export default class ContestPostEndingProcessor {
 
     async #handleEndedUnjudgedContestsFromDB() { 
         const contests = await this.#contestDBService.getAllEndedUnjudgedContest(); 
+
         for(const contest of contests) { 
             await this.#handleEndedUnjudgedContest(contest); 
         }
     }
 
     async #handleEndedUnjudgedContest(contest) {  
+        console.log("handling contest: " + contest.id)
+
         const endedContestProcessor = new EndedContestProcessor(
             this.#contestStateMachineFactory.getStateMachine(contest), 
             this.#judgeAPIWrapper

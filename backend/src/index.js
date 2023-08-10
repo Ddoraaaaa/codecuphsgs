@@ -18,6 +18,7 @@ import ContestPostEndingProcessor from "./judge/contest_postending_processor";
 import JudgeAPIWrapper from "./judge/mockJudgeAPIWrapper";
 import SubmissionModel from "./models/submission.model";
 import SubmissionService from "./services/submission.service";
+import MockJudgeAPIWrapper from "./judge/mockJudgeAPIWrapper";
 
 const contestDBService = new ContestService(ContestModel); 
 const submissionDBService = new SubmissionService(SubmissionModel); 
@@ -70,7 +71,8 @@ function startServer() {
 }
 
 function startContestPostEndingProcessor() { 
-    const judgeAPIWrapper = new JudgeAPIWrapper(); 
+    // WARNING: using mock judge api
+    const judgeAPIWrapper = new MockJudgeAPIWrapper(); 
     const contestStateMachineFactory = new ContestStateMachineFactory(contestDBService);
     const contestPostEndingProcessor = new ContestPostEndingProcessor(contestStateMachineFactory, judgeAPIWrapper, contestDBService); 
     contestPostEndingProcessor.start(); 

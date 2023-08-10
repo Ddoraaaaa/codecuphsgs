@@ -10,10 +10,11 @@ export default class EndedContestProcessor {
     }
 
     async process() { 
+        await this.#contestStateMachine.init(); 
         const promises = []; 
         console.log(Object.keys(this.#contestStateMachine))
         while(await this.#contestStateMachine.hasNextUnjudgedMatch()) {
-            // console.log("dljsdldflkfjldjfdlkjfdklfj"); 
+            console.log("dljsdldflkfjldjfdlkjfdklfj"); 
             // put this on hold until there is a new match
             const {matchId, submission1, submission2} = await this.#contestStateMachine.yieldNextUnjudgedMatch();
              
