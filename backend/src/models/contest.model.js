@@ -22,8 +22,5 @@ const contestSchema = new Schema({
 }, contestSchemaOptions); 
 
 const  ContestModel = model('Contest', contestSchema)
-export { 
-	ContestModel, 
-	contestSchemaOptions
-}
+export default ContestModel; 
 
