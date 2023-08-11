@@ -1,4 +1,5 @@
 import ContestModel from "../models/contest.model";
+import * as submissionService from "../services/submission.service" 
 
 async function getAllEndedUnjudgedContest() { 
     return Array.from(
@@ -6,13 +7,17 @@ async function getAllEndedUnjudgedContest() {
         ).map(contestDocument => contestDocument.toObject()); 
 }
 
+/*
+    returns array of all contests in the database. 
+*/
 async function getAllContests() { 
     return Array.from(await ContestModel.find())
         .map(contestDocument => contestDocument.toObject()); 
 }
 
-
-
+/*
+    return {success: boolean, error: undefined | string, insertedContest: undefined | object}
+*/
 async function createContest(contest) {
     let reformattedContest = {
         id: await ContestModel.count() + 1, 
@@ -24,12 +29,18 @@ async function createContest(contest) {
         judgeMode: contest.judgeMode, 
         contestFormat: contest.contestFormat
     }
+    
     if(contest.judged != undefined) { 
         console.warn("Contest is marked as judged / unjudged!!!!"); 
         reformattedContest.judged = contest.judged; 
     }
-    let insertedContest = await ContestModel.create(reformattedContest); 
-    return insertedContest; 
+
+    try {
+        let insertedContest = await ContestModel.create(reformattedContest); 
+        return insertedContest; 
+    } catch (e) { 
+        throw new Error("Failed at creating ")
+    }
 }
 
 async function getContest(contestId) { 
@@ -56,6 +67,40 @@ async function isContestActive(contestId) {
     }
     return true; 
 } 
+
+async function createSubmission({
+    contestId, 
+    userId, 
+    sourceUrl
+}) { 
+    if(!isContestActive(contestId)) { 
+        return {
+            success: false, 
+            err: "Contest is not active"
+        }; 
+    }
+
+    const submissionServiceResponse = submissionService.createSubmission({
+        contestId, 
+        userId, 
+        sourceUrl
+    }); 
+
+    if(!submissionServiceResponse.success) { 
+        return { 
+            success: false, 
+            err: submissionServiceResponse.err
+        }
+    }
+
+    const insertedSubmission = submissionServiceResponse.insertedSubmission; 
+
+    await contestService.setFinalSubmission(contestId, userId, submissionData.id); 
+
+    return { 
+        success: true
+    }
+}
 
 async function getFinalSubmission(contestId, userId) { 
     const contestDocument = await ContestModel.findOne({id: contestId});

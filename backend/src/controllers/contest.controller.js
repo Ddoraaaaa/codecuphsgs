@@ -101,43 +101,39 @@ async function submitToContest(req, res, next) {
     let contestId = req.params.contestId; 
 
     if(!contestId) { 
-        return res.status(401).send({msg: "Missing contestId"}); 
+        return res.status(401).send({err: "Missing contestId"}); 
     }
+
     if(!req.session.userId) { 
         console.log(req.session)
-        return res.status(401).send({msg: "Not logged in"}); 
+        return res.status(401).send({err: "Not logged in"}); 
     }
 
-    if(!contestService.isContestActive(contestId)) { 
-        return res.status(401).send({msg: "Contest is not active"}); 
-    }
+    sourceCodeUpload(req, res, (error) => { 
+        // if (error instanceof multer.MulterError) {
+        //     throw(error); 
+        //     return res.status(200).send({msg: "Server error"}); 
+        // } else 
+        if (error) {
+            console.error("errorOR: " + erroror); 
+            throw(error); 
+            return res.status(200).send({msg: "Server error"}); 
+        }
+    }); 
 
-    try {
-        sourceCodeUpload(req, res, (error) => { 
-            // if (error instanceof multer.MulterError) {
-            //     throw(error); 
-            //     return res.status(200).send({msg: "Server error"}); 
-            // } else 
-            if (error) {
-                console.error("errorOR: " + erroror); 
-                throw(error); 
-                return res.status(200).send({msg: "Server error"}); 
-            }
-        })
+    console.log("Files in request: " + req.files); 
 
-        console.log(req.files); 
+    const serviceResponse = await contestService.createSubmission({ 
+        contestId: contestId, 
+        userId: req.session.userId, 
+        sourceUrl: ""
+    }); 
 
-        const submissionData = await submissionService.createSubmission({ 
-            contestId: contestId, 
-            userId: req.session.userId, 
-            sourceUrl: ""
-        }); 
-
-        await contestService.setFinalSubmission(contestId, userId, submissionData.id); 
-
-        return res.status(200).send({msg: "submitted"}); 
-    } catch(e) { 
-        return res.status(401).send({msg: "Server Error: " + e});
+    if(serviceResponse.success) { 
+        return res.status(200).send({msg: "Submitted successfully"}); 
+    } 
+    else {
+        return res.status(401).send({err: serviceResponse.err});
     }
 }
 
