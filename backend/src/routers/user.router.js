@@ -19,6 +19,4 @@ userRouter.post("/logout", endSession)
 userRouter.get("/user/:userId", getUser)
 userRouter.get("/users", getAllUsers)
 
-export { 
-    userRouter
-}
+export default userRouter; 

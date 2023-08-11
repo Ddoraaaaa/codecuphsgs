@@ -1,175 +1,165 @@
 import sourceCodeUpload from "../middlewares/upload";
+import * as contestService from "../services/contest.service";
+import * as submissionService from "../services/submission.service"; 
 
-export default class ContestController {
-    #contestService; 
-    #submissionService; 
+async function createContest(req, res, next) { 
+    console.log(req.session.userId)
+    if(!req.session.isAdmin) { 
+        return res.status(401).send({msg: "User is not admin"}); 
+    }
+    try {
+        const contest = await contestService.createContest(req.body);
 
-    constructor(contestService, submissionService) { 
-        this.#contestService = contestService; 
-        this.#submissionService = submissionService; 
+        if(!contest) { 
+            return res.status(401).send({msg:  `Creating contest failed`}); 
+        }
 
-        this.createContest.bind(this);
-        this.getAllContests.bind(this); 
-        this.getContest.bind(this); 
-        this.deleteContest.bind(this); 
-        this.submitToContest.bind(this); 
+        return res.status(200).send({msg: "creating contest succeeded"}); 
+    } catch(e) { 
+        return res.status(401).send({msg:  `Error: ${e}`}); 
+    }
+}
+
+async function getAllContests(req, res, next) { 
+    console.log("ayoooooo " + this); 
+
+    let contests = await contestService.getAllContests(); 
+    
+    if(!req.session.isAdmin) { 
+        contests = contests.map(restrictedView); 
     }
 
-    async createContest(req, res, next) { 
-        console.log(req.session.userId)
-        if(!req.session.isAdmin) { 
-            return res.status(401).send({msg: "User is not admin"}); 
-        }
-        try {
-            const contest = await this.#contestService.createContest(req.body);
+    console.log(222222); 
 
-            if(!contest) { 
-                return res.status(401).send({msg:  `Creating contest failed`}); 
-            }
+    return res.status(200).send({
+        msg: "Successful", 
+        contests
+    }); 
+}
 
-            return res.status(200).send({msg: "creating contest succeeded"}); 
-        } catch(e) { 
-            return res.status(401).send({msg:  `Error: ${e}`}); 
-        }
+async function getContest(req, res, next) { 
+    let contestId = req.params.contestId; // bug: params, not param
+    console.log(req.params)
+    console.log(contestId)
+
+    if(contestId == null) { 
+        return res.status(401).send({msg: "Missing parameters"}); 
     }
 
-    async getAllContests(req, res, next) { 
-        console.log("ayoooooo " + this); 
-        this.#contestService; 
 
-        let contests = await this.#contestService.getAllContests(); 
-        
-        if(!req.session.isAdmin) { 
-            contests = contests.map(ContestController.#restrictedView); 
+    try {
+        console.log(this); 
+        let contest = await contestService.getContest(contestId); 
+
+        console.log("good"); 
+
+
+        if(!contest) { 
+            return res.status(401).send({msg: "Contest not found"}); 
         }
 
-        console.log(222222); 
+
+        console.log(contest); 
+        if(!req.session.isAdmin) { 
+            contest = restrictedView(contest); 
+        }
+
+        console.log(contest); 
 
         return res.status(200).send({
             msg: "Successful", 
-            contests
+            contest
+        })
+    } catch(e) { 
+        console.log("server error" + e)
+        return res.status(401).send({
+            msg: "Server Error " + e  
         }); 
     }
+}
 
-    async getContest(req, res, next) { 
-        let contestId = req.params.contestId; // bug: params, not param
-        console.log(req.params)
-        console.log(contestId)
+async function deleteContest(req, res, next) { 
+    let contestId = req.query.contestId; 
 
-        if(contestId == null) { 
-            return res.status(401).send({msg: "Missing parameters"}); 
-        }
+    if(contestId == null) { 
+        return res.status(401).send({msg: "Missing contestId"}); 
+    }
 
-
-        try {
-            console.log(this); 
-            let contest = await this.#contestService.getContest(contestId); 
-
-            console.log("good"); 
-
-
-            if(!contest) { 
-                return res.status(401).send({msg: "Contest not found"}); 
-            }
+    if(!req.session.isAdmin) { 
+        return res.status(401).send({msg: "User is not admin"})
+    }
     
+    try {
+        contestService.deleteContest(contestId)
+        return res.status(200).send({msg: "deleted"}); 
+    } catch(e) { 
+        return res.status(401).send({msg: "Server error: " + e}); 
+    }
+}
 
-            console.log(contest); 
-            if(!req.session.isAdmin) { 
-                contest = ContestController.#restrictedView(contest); 
-            }
+async function submitToContest(req, res, next) { 
+    let contestId = req.params.contestId; 
 
-            console.log(contest); 
-
-            return res.status(200).send({
-                msg: "Successful", 
-                contest
-            })
-        } catch(e) { 
-            console.log("server error" + e)
-            return res.status(401).send({
-                msg: "Server Error " + e  
-            }); 
-        }
+    if(!contestId) { 
+        return res.status(401).send({err: "Missing contestId"}); 
     }
 
-    async deleteContest(req, res, next) { 
-        let contestId = req.query.contestId; 
-
-        if(contestId == null) { 
-            return res.status(401).send({msg: "Missing contestId"}); 
-        }
-
-        if(!req.session.isAdmin) { 
-            return res.status(401).send({msg: "User is not admin"})
-        }
-        
-        try {
-            this.#contestService.deleteContest(contestId)
-            return res.status(200).send({msg: "deleted"}); 
-        } catch(e) { 
-            return res.status(401).send({msg: "Server error: " + e}); 
-        }
+    if(!req.session.userId) { 
+        console.log(req.session)
+        return res.status(401).send({err: "Not logged in"}); 
     }
 
-    async submitToContest(req, res, next) { 
-        let contestId = req.params.contestId; 
-
-        if(!contestId) { 
-            return res.status(401).send({msg: "Missing contestId"}); 
+    sourceCodeUpload(req, res, (error) => { 
+        // if (error instanceof multer.MulterError) {
+        //     throw(error); 
+        //     return res.status(200).send({msg: "Server error"}); 
+        // } else 
+        if (error) {
+            console.error("errorOR: " + erroror); 
+            throw(error); 
+            return res.status(200).send({msg: "Server error"}); 
         }
-        if(!req.session.userId) { 
-            console.log(req.session)
-            return res.status(401).send({msg: "Not logged in"}); 
-        }
+    }); 
 
-        if(!this.#contestService.isContestActive(contestId)) { 
-            return res.status(401).send({msg: "Contest is not active"}); 
-        }
+    console.log("Files in request: " + req.files); 
 
-        try {
-            sourceCodeUpload(req, res, (error) => { 
-                // if (error instanceof multer.MulterError) {
-                //     throw(error); 
-                //     return res.status(200).send({msg: "Server error"}); 
-                // } else 
-                if (error) {
-                    console.error("errorOR: " + erroror); 
-                    throw(error); 
-                    return res.status(200).send({msg: "Server error"}); 
-                }
-            })
+    const serviceResponse = await contestService.createSubmission({ 
+        contestId: contestId, 
+        userId: req.session.userId, 
+        sourceUrl: ""
+    }); 
 
-            console.log(req.files); 
+    if(serviceResponse.success) { 
+        return res.status(200).send({msg: "Submitted successfully"}); 
+    } 
+    else {
+        return res.status(401).send({err: serviceResponse.err});
+    }
+}
 
-            const submissionData = await this.#submissionService.createSubmission({ 
-                contestId: contestId, 
-                userId: req.session.userId, 
-                sourceUrl: ""
-            }); 
-
-            await this.#contestService.setFinalSubmission(contestId, userId, submissionData.id); 
-
-            return res.status(200).send({msg: "submitted"}); 
-        } catch(e) { 
-            return res.status(401).send({msg: "Server Error: " + e});
-        }
+async function getContestResults(req, res, next) { 
+    const contestId = req.params.contestId; 
+    if(!contestId) { 
+        return res.status(401).send({msg: "Missing contest id"}); 
     }
 
-    async getContestResultss(req, res, next) { 
-        const contestId = req.params.contestId; 
-        if(!contestId) { 
-            return res.status(401).send({msg: "Missing contest id"}); 
-        }
+    const results = await contestService.getContestResults(contestId); 
+    return res.status(200).send({results}); 
+}
 
-        const results = await this.#contestService.getContestResults(contestId); 
-        return res.status(200).send({results}); 
-    }
+function restrictedView(contest) { 
+    return contest; 
+}
 
-    static #restrictedView(contest) { 
-        return contest; 
-    }
+function unrestrictedView(contest) { 
+    return contests;
+}
 
-    static #unrestrictedView(contest) { 
-        return contests;
-    }
+export { 
+    createContest, 
+    getAllContests, 
+    getContest, 
+    deleteContest, 
+    submitToContest, 
+    getContestResults, 
 }

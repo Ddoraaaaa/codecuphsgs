@@ -25,7 +25,7 @@ async function createSession(req, res, next) {
         }); 
     }
 
-    console.log(user)
+    console.log("user: " + user)
 
     req.session.userId = user.id; 
     req.session.isAdmin = user.isAdmin
