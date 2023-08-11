@@ -1,7 +1,6 @@
 "use client"; 
 
 import { createGame } from "@/backend_api/games";
-import { assert } from "console";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
@@ -55,7 +54,7 @@ export default function CreateGamePage() {
                 <p className="mt-1 text-sm leading-6 text-gray-600"></p>
 
                 <div className="sm:col-span-3">
-                    <label html className="block text-sm font-medium leading-6 text-gray-900">Name</label>
+                    <label className="block text-sm font-medium leading-6 text-gray-900">Name</label>
                     <div className="mt-2">
                         <input type="text" onChange={onNameUpdate}  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </input>

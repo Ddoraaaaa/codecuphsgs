@@ -4,7 +4,6 @@ import { ContestInfoI } from "@/backend_api/contests"
 import { useState, useEffect, useContext } from "react"
 import Link from "next/link"
 import { displayMili } from "../helper"
-import { error } from "console";
 import { ContestsInfoContext } from "../layout";
 import assert from "assert";
 
@@ -13,10 +12,10 @@ function UpcomingContest({
 }: { 
     contestInfo: ContestInfoI
 }): JSX.Element {
-    const [beforeStart, setBeforeStart] = useState(displayMili(contestInfo.startDate - (new Date())));
+    const [beforeStart, setBeforeStart] = useState(displayMili(contestInfo.startDate.getTime() - (new Date().getTime())));
     useEffect(() => { 
         const interval = setInterval(() => {
-            setBeforeStart(displayMili(contestInfo.startDate - new Date()));
+            setBeforeStart(displayMili(contestInfo.startDate.getTime() - new Date().getTime()));
         }, 1000);
     
         return () => clearInterval(interval);

@@ -12,10 +12,10 @@ function OngoingContest({
 }: { 
     contestInfo: ContestInfoI
 }): JSX.Element {
-    const [beforeEnd, setBeforeEnd] = useState(displayMili(contestInfo.endDate - (new Date())));
+    const [beforeEnd, setBeforeEnd] = useState(displayMili(contestInfo.endDate.getTime() - (new Date()).getTime()));
     useEffect(() => { 
         const interval = setInterval(() => {
-            setBeforeEnd(displayMili(contestInfo.endDate - new Date()));
+            setBeforeEnd(displayMili(contestInfo.endDate.getTime() - new Date().getTime()));
         }, 1000);
     
         return () => clearInterval(interval);

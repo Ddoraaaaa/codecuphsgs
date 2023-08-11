@@ -22,8 +22,7 @@ async function logout(): Promise<{
             success, 
             msg, 
         }
-    } catch(error) {
-        alert(error); 
+    } catch(error: any) {
         return { 
             success: false, 
             msg: error.toString()
@@ -76,7 +75,7 @@ async function signup({
                 userIsAdmin: jsonResponse.user.isAdmin
             }
         }
-    } catch(error) {
+    } catch(error: any) {
         return { 
             success: false, 
             msg: error.toString()
@@ -130,8 +129,7 @@ async function login({
             }})
         }
     }
-    catch(error) {
-        alert(error); 
+    catch(error: any) {
         return { 
             success: false, 
             msg: "login failed"

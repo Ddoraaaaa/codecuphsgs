@@ -1,9 +1,9 @@
 "use client"; 
 
 import { ReactNode } from "react";
-import SectionHeader from "../../utils/section_header";
-import { useParams, usePathname } from "next/navigation";
-import SubsectionBodyContainer from "../../utils/subsectionBodyContainer";
+import SectionHeader from "../../components/section_header";
+import { useParams } from "next/navigation";
+import SubsectionBodyContainer from "../../components/subsectionBodyContainer";
 export default function ContestDetailsLayout({
     children
 }: { 
