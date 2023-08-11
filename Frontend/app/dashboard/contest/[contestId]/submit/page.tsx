@@ -1,8 +1,6 @@
 "use client"; 
 
-import { useState } from "react"
-import bracket from "../../../../../public/bracket.png"
-import Image from "next/image"
+import { FormEvent, useState } from "react"
 import { useParams,useRouter} from "next/navigation";
 import { submitCode } from "@/backend_api/contests";
 export default function SubmitPage() { 
@@ -11,43 +9,46 @@ export default function SubmitPage() {
     const router = useRouter(); 
     const params = useParams(); 
 
-    function handleDrag(event) {
+    // function handleDrag(event) {
+    //     event.preventDefault(); 
+    //     event.stopPropagation(); 
+    //     if(event.type == "dragenter" || event.type == "dragover") { 
+    //         setDragActive(true); 
+    //     } else if (event.type == "dragleave") { 
+    //         setDragActive(false); 
+    //     }
+    // }
+
+    // function handleDrop(event) { 
+    //     event.preventDefault(); 
+    //     event.stopPropagation(); 
+    //     setDragActive(false); 
+    //     console.log("dropped!!!"); 
+    //     console.log(event.dataTransfer); 
+    //     if(event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0]) { 
+    //         setFile(file); 
+    //     }
+    // }
+    function handleFileSelected(event: FormEvent) {
         event.preventDefault(); 
-        event.stopPropagation(); 
-        if(event.type == "dragenter" || event.type == "dragover") { 
-            setDragActive(true); 
-        } else if (event.type == "dragleave") { 
-            setDragActive(false); 
+
+        const target = event.target as HTMLInputElement; 
+        if(target && target.files && target.files[0]) { 
+            setFile(target.files[0]); 
         }
     }
 
-    function handleDrop(event) { 
-        event.preventDefault(); 
-        event.stopPropagation(); 
-        setDragActive(false); 
-        console.log("dropped!!!"); 
-        console.log(event.dataTransfer); 
-        if(event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0]) { 
-            setFile(file); 
-        }
-    }
-    function handleFileSelected(event:Event) {
-        event.preventDefault(); 
-        if(event.target && event.target.files && event.target.files[0]) { 
-            setFile(event.target.files[0]); 
-        }
-    }
-
-    function handleCancel(event) { 
+    function handleCancel(event: FormEvent) { 
         event.preventDefault(); 
         setFile(null); 
     }
 
-    async function handleSubmit(event) { 
+    async function handleSubmit(event: FormEvent) { 
          event.preventDefault(); 
+
          if(file != null) { 
             try { 
-                let submitResult = await submitCode({contestId: params.contestId, file}); 
+                let submitResult = await submitCode({contestId: parseInt(params.contestId), file}); 
                 if(submitResult.success) { 
                     router.push(`/dashboard/contests/${params.contestId}/submissions`);    
                 }
@@ -74,7 +75,8 @@ export default function SubmitPage() {
 
                 <div className="col-span-full">
                 <label htmlFor="cover-photo" className="block text-sm font-medium leading-6 text-gray-900">Source code</label>
-                <div onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}
+                <div 
+                    // onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}
                     className={`mt-2 flex justify-center rounded-lg border ${dragActive?"border-sky-500": "border-dashed border-gray-900/25"} px-6 py-10`}>
                     <div className="text-center">
                     {/* <svg className="mx-auto h-12 w-12 text-gray-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

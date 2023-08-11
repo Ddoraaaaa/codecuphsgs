@@ -1,10 +1,8 @@
 "use client"; 
 
 import { ContestInfoI } from "@/backend_api/contests"
-import { useState, useEffect, useContext } from "react"
+import { useContext } from "react"
 import Link from "next/link"
-import { displayMili } from "../helper"
-import { error } from "console";
 import { ContestsInfoContext } from "../layout";
 import assert from "assert";
 

@@ -40,7 +40,7 @@ async function createGame({
             success, 
             msg
         }
-    } catch(e) { 
+    } catch(e: any) { 
         return { 
             success: false, 
             msg: e.toString()
@@ -79,7 +79,7 @@ async function getGameInfo(
                 msg: await response.text()
             })
         }
-    } catch(e) { 
+    } catch(e: any) { 
         return { 
             success: false, 
             msg: e.toString()
@@ -105,7 +105,7 @@ async function getAllGamesInfo(
             success, 
             msg, 
             ...(success && {
-                gamesInfo: jsonResponse.games.map(game => { 
+                gamesInfo: jsonResponse.games.map((game: any) => { 
                     return { 
                         id: game.id, 
                         name: game.name, 
@@ -118,7 +118,7 @@ async function getAllGamesInfo(
                 })
             })
         }) 
-    } catch(e) { 
+    } catch(e: any) { 
         return { 
             success: false, 
             msg: e.toString()

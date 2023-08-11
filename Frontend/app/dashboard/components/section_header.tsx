@@ -12,10 +12,9 @@ export default function SectionHeader({
 }: { 
     sectionTabs: sectionTabI[]
 }): JSX.Element { 
-    const pathname = usePathname(); 
     const userInfo = getUserInfo(); 
 
-    const [selectedIndex, setSelectedIndex] = useState(0); 
+    const pathName = usePathname(); 
 
     const sectionTabFiltered = sectionTabs.filter(sectionTab => !sectionTab.adminRequired || (userInfo && userInfo.userIsAdmin)); 
     console.log(sectionTabFiltered); 
@@ -27,9 +26,8 @@ export default function SectionHeader({
                 sectionTabFiltered.map((sectionTab, index) => 
                     <SectionTab 
                         key={index}
-                        selected={pathname === sectionTab.href} 
-                        sectionTab={sectionTab}>
-                    </SectionTab>
+                        selected={pathName === sectionTab.href} 
+                        sectionTab={sectionTab}/>
                 )
             }
         </nav>

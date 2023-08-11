@@ -1,8 +1,7 @@
 "use client"; 
 
 import { getResult } from "@/backend_api/contests";
-import { useEffect, useLayoutEffect, useState } from "react";
-import useContestDetails from "../contest_details_hook";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
 export default function ResultPage() { 

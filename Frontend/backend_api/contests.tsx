@@ -84,7 +84,7 @@ async function getAllContests() : Promise<{
         return { 
             success, 
             msg, 
-            contestsInfo: contests.map((contest) => {
+            contestsInfo: contests.map((contest: any) => {
                 return { 
                     contestId: contest.id, 
                     contestName: contest.name, 
@@ -93,7 +93,7 @@ async function getAllContests() : Promise<{
                 }
             })
         }
-    } catch(error) {
+    } catch(error: any) {
         return { 
             success: false, 
             msg: error.toString()
@@ -157,7 +157,7 @@ async function getContestDetails(
                 gameRenderUrl: game.renderUrl
             }
         }; 
-    }catch(e) {
+    }catch(e: any) {
         return { 
             success: false, 
             msg: e.toString()
@@ -195,8 +195,7 @@ async function submitCode({
             msg
         }
 
-    }catch(error) {
-        alert(error); 
+    }catch(error: any) {
         return { 
             success: false, 
             msg: error.toString()

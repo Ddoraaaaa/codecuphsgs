@@ -98,7 +98,7 @@ export default function LoginPage() {
                         </button>
                         <hr className="w-full"></hr>
                         <div className="w-full text-sm"> 
-                            Don't have an account?&#160;
+                            Don&apos;t have an account?&#160;
                             <Link href="/authentication/signup" className="underline">Register here</Link>
                         </div>
                     </div>

@@ -1,14 +1,14 @@
 "use client"; 
 
 import { setUserInfo } from "@/session_storage_api/api";
-import {login} from "../../../backend_api/users"
-import assert from "assert";
-import {useState} from "react"
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { logout } from "@/backend_api/users";
+import { useEffect } from "react";
 
 export default function LogoutPage() { 
-    logout(); 
-    setUserInfo(null);
-    redirect("/authentication/login"); 
+    useEffect(() => {
+        logout(); 
+        setUserInfo(null);
+        redirect("/authentication/login"); 
+    }, [])
 }

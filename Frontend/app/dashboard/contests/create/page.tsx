@@ -1,9 +1,5 @@
 "use client"; 
-
-import { useState } from 'react';
-import { start } from 'repl';
-import ContestInfoForm from '../../utils/contestForm';
-import { create } from 'domain';
+import ContestInfoForm from '../../components/contestForm';
 import { createContest } from '@/backend_api/contests';
 import { useRouter } from 'next/navigation';
 
