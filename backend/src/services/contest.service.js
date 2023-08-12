@@ -1,5 +1,10 @@
+import { MongooseError } from "mongoose";
 import ContestModel from "../models/contest.model";
 import * as submissionService from "../services/submission.service" 
+import ServiceError from "./errors/serviceError";
+import ValidationError from "./errors/validationError";
+import DatabaseError from "./errors/databaseError";
+import UnknownInternalError from "./errors/unknownInternalError";
 
 async function getAllEndedUnjudgedContest() { 
     return Array.from(
@@ -73,32 +78,39 @@ async function createSubmission({
     userId, 
     sourceUrl
 }) { 
+    if(isNaN(contestId)) { 
+        throw new ServiceError("Contest Id is not a number"); 
+    }
+
+    if(isNaN(userId)) { 
+        throw new ServiceError("UserId is not a number"); 
+    }
+
+    if(typeof sourceUrl != "string") { 
+        throw new ServiceError("soureUrl is not a string"); 
+    }
+
     if(!isContestActive(contestId)) { 
-        return {
-            success: false, 
-            err: "Contest is not active"
-        }; 
+        throw new ValidationError("Invalid request: contest is not active"); 
     }
 
-    const submissionServiceResponse = submissionService.createSubmission({
-        contestId, 
-        userId, 
-        sourceUrl
-    }); 
+    try { 
+        const insertedSubmission = await submissionService.createSubmission({
+            contestId, 
+            userId, 
+            sourceUrl
+        }); ; 
 
-    if(!submissionServiceResponse.success) { 
-        return { 
-            success: false, 
-            err: submissionServiceResponse.err
+        await setFinalSubmission({contestId, userId, submissionId: insertedSubmission.id}); 
+    } 
+    catch(err) {
+        console.error("Error at createSubmission service: " + err); 
+        if(err instanceof MongooseError) { 
+            throw new DatabaseError("Database error"); 
         }
-    }
-
-    const insertedSubmission = submissionServiceResponse.insertedSubmission; 
-
-    await contestService.setFinalSubmission(contestId, userId, submissionData.id); 
-
-    return { 
-        success: true
+        else { 
+            throw new UnknownInternalError(); 
+        }
     }
 }
 
@@ -107,7 +119,7 @@ async function getFinalSubmission(contestId, userId) {
     return contestDocument.finalSubmissions.get((userId).toString()); 
 }
 
-async function setFinalSubmission(contestId, userId, submissionId) { 
+async function setFinalSubmission({contestId, userId, submissionId}) { 
     try {
         await ContestModel.updateOne(
             {id: submissionId, userId: userId, contestId: contestId}, 
@@ -153,6 +165,7 @@ export {
     getContest, 
     deleteContest, 
     isContestActive, 
+    createSubmission, 
     getFinalSubmission, 
     setFinalSubmission, 
     getContestResults, 
