@@ -1,4 +1,4 @@
-import { User } from "../models/user.model"
+import UserModel from "../models/user.model"
 import bcrypt from "bcrypt"
 async function createUser(req, res, next) { 
     let username = req.body.username; 

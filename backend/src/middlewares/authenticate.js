@@ -1,4 +1,4 @@
-import {User} from "../models/user.model";
+import UserModel from "../models/user.model";
 import { userInfoRestrictedView } from "../services/user.service";
 const bcrypt = require("bcrypt"); 
 
@@ -14,7 +14,7 @@ async function createSession(req, res, next) {
         return res.status(401).send({msg: "Missing information"}); 
     }
 
-    const user = username? await User.findOne({username}): await User.findOne({email})
+    const user = username? await UserModel.findOne({username}): await UserModel.findOne({email})
     if(!user) {
         return res.status(401).send({msg: "User not found"}); 
     }
