@@ -1,0 +1,86 @@
+import UserModel from "../models/user.model"
+import ValidationError from "../services/errors/validationError";
+import * as userService from "../services/user.service"
+import { userInfoRestrictedView, userInfoUnrestrictedView } from "../utils/user";
+
+async function createUser(req, res, next) { 
+    const {username, email, password} = req.body;
+
+    // validation
+    if(!username && !email) { 
+        return res.status(401).send({err: "Missing username and email"}); 
+    }
+
+    if(!password) { 
+        return res.status(401).send({err: "Missing password"}); 
+    }
+
+    try { 
+        const createdUser = userService.createUser({
+            username, 
+            email, 
+            password
+        }); 
+
+        const userClientView = req.session.isAdmin? userInfoUnrestrictedView(createdUser): userInfoRestrictedView(createdUser); 
+
+        return res.status(200).send({msg: "User created", user: createdUser}); 
+    }
+    catch(err) {
+        if(err instanceof ValidationError) { 
+            return res.status(401).send({err: err.message}); 
+        }
+        // abstract away internal service errors. 
+        else {
+            return res.status(500).send({err: "Internal Server Error"}); 
+        }
+    }
+}
+
+async function getUser(req, res, next) { 
+    let userId = req.params.userId; 
+    let user = await UserModel.findOne({id: userId})
+
+    if(!user) { 
+        return res.status(401).send({msg: "user not found"})
+    }
+
+    if(req.session.isAdmin || req.session.userId == userId) { 
+        return res.status(200).send({
+            msg: "retrieved successfully", 
+            user: userInfoUnrestrictedView(user)
+        })
+    }
+
+    return res.status(200).send({
+        msg: "retrieved successfully", 
+        user: userInfoRestrictedView(user)
+    })    
+}
+
+// received "cannot GET /users". thought it was because of mispelling some words, 
+// but it is in fact because of the function getAllUser.
+
+async function getAllUsers(req, res, next) { 
+    let users = await UserModel.find()
+    console.log(users)
+
+    if(req.session.isAdmin) { 
+        return res.status(200).send({
+            msg: "retrieved successfully", 
+            users: users.map(userInfoUnrestrictedView)
+        })
+    }
+
+    return res.status(200).send({
+        msg: "retrieved successfully", 
+        users: users.map(userInfoRestrictedView)
+    })    
+}
+
+export { 
+    createUser, 
+    getUser, 
+    getAllUsers, 
+
+}

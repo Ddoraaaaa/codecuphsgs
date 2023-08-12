@@ -4,19 +4,15 @@ import {
     endSession, 
 } from "../middlewares/authenticate"; 
 
-import { 
-    createUser, 
-    getUser, 
-    getAllUsers
-} from "../services/user.service"
+import * as userController from "../controllers/user.controller"
 
 const userRouter = Router()
 
-userRouter.post("/register", createUser)
+userRouter.post("/register", userController.createUser)
 userRouter.post("/login", createSession)
 userRouter.post("/logout", endSession)
 
-userRouter.get("/user/:userId", getUser)
-userRouter.get("/users", getAllUsers)
+userRouter.get("/user/:userId", userController.getUser)
+userRouter.get("/users", userController.getAllUsers)
 
 export default userRouter; 

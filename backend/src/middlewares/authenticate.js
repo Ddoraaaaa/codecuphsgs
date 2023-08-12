@@ -1,5 +1,5 @@
 import UserModel from "../models/user.model";
-import { userInfoRestrictedView } from "../services/user.service";
+import { userInfoRestrictedView, userInfoUnrestrictedView } from "../utils/user";
 const bcrypt = require("bcrypt"); 
 
 async function createSession(req, res, next) {
