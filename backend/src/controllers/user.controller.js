@@ -8,11 +8,11 @@ async function createUser(req, res, next) {
 
     // validation
     if(!username && !email) { 
-        return res.status(401).send({err: "Missing username and email"}); 
+        return res.status(403).send({err: "Missing username and email"}); 
     }
 
     if(!password) { 
-        return res.status(401).send({err: "Missing password"}); 
+        return res.status(403).send({err: "Missing password"}); 
     }
 
     try { 
@@ -24,38 +24,48 @@ async function createUser(req, res, next) {
 
         const userClientView = req.session.isAdmin? userInfoUnrestrictedView(createdUser): userInfoRestrictedView(createdUser); 
 
-        return res.status(200).send({msg: "User created", user: createdUser}); 
+        return res.status(200).send({msg: "User created", user: userClientView}); 
     }
     catch(err) {
         if(err instanceof ValidationError) { 
-            return res.status(401).send({err: err.message}); 
+            return res.status(403).send({err: err.message}); 
         }
         // abstract away internal service errors. 
         else {
+            console.error("Error at createUser controller: " + err); 
             return res.status(500).send({err: "Internal Server Error"}); 
         }
     }
 }
 
 async function getUser(req, res, next) { 
-    let userId = req.params.userId; 
-    let user = await UserModel.findOne({id: userId})
+    const {userId} = req.params; 
 
-    if(!user) { 
-        return res.status(401).send({msg: "user not found"})
+    if(!userId) { 
+        return res.status(403).send({err: "Missing userId"}); 
     }
 
-    if(req.session.isAdmin || req.session.userId == userId) { 
+    if(!req.session.isAdmin && req.session.userId !== userId) { 
+        return res.status(401).send({err: "Unauthorised access"}); 
+    }
+
+    try {
+        const foundUser = userService.getUser({id: userId}); 
+        const userClientView = req.session.isAdmin? userInfoUnrestrictedView(foundUser): userInfoRestrictedView(foundUser); 
         return res.status(200).send({
-            msg: "retrieved successfully", 
-            user: userInfoUnrestrictedView(user)
-        })
+            msg: "Retrieved successfully", 
+            user: userClientView
+        }); 
     }
-
-    return res.status(200).send({
-        msg: "retrieved successfully", 
-        user: userInfoRestrictedView(user)
-    })    
+    catch(err) { 
+        if(err instanceof ValidationError) { 
+            return res.status(401).send({err: err.message}); 
+        }
+        else { 
+            console.error("Error at getUser controller: " + err); 
+            return res.status(500).send({err: "Internal Server Error"}); 
+        }
+    }
 }
 
 // received "cannot GET /users". thought it was because of mispelling some words, 
@@ -82,5 +92,4 @@ export {
     createUser, 
     getUser, 
     getAllUsers, 
-
 }
