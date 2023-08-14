@@ -5,7 +5,7 @@ import SectionHeader from "../components/section_header";
 import { useLayoutEffect, useState } from "react";
 import { createContext } from "react";
 import { ContestInfoI, getAllContests } from "@/backend_api/contests";
-import assert from "assert";
+import alertBackendAPIError from "@/app/utils/alertSystem/alertBackendAPIError";
 
 const sectionTabs = [
     {
@@ -43,14 +43,12 @@ export default function ContestsLayout({
     const [contestsInfo, setContestsInfo] = useState<ContestInfoI[] | null> (null); 
 
     async function refetchContestsInfo() { 
-        let fetchResult = await getAllContests(); 
-        if(fetchResult.success) { 
-            assert(fetchResult.contestsInfo); 
-            console.log(typeof(fetchResult.contestsInfo[0].startDate))
-            setContestsInfo(fetchResult.contestsInfo); 
+        try { 
+            const contestsInfo = await getAllContests(); 
+            setContestsInfo(contestsInfo); 
         }
-        else { 
-            alert(fetchResult.msg); 
+        catch(error) { 
+            alertBackendAPIError(error, "contestInfoRefetcher"); 
         }
     }
 

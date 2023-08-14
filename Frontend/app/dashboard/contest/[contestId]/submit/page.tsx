@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react"
 import { useParams,useRouter} from "next/navigation";
 import { submitCode } from "@/backend_api/contests";
+import alertBackendAPIError from "@/app/utils/alertSystem/alertBackendAPIError";
 export default function SubmitPage() { 
     const [file, setFile] = useState<File | null>(null); 
     const [dragActive, setDragActive] = useState<boolean>(false); 
@@ -46,18 +47,14 @@ export default function SubmitPage() {
     async function handleSubmit(event: FormEvent) { 
          event.preventDefault(); 
 
-         if(file != null) { 
+         if(file) { 
             try { 
-                let submitResult = await submitCode({contestId: parseInt(params.contestId), file}); 
-                if(submitResult.success) { 
-                    router.push(`/dashboard/contests/${params.contestId}/submissions`);    
-                }
-                else { 
-                    alert(submitResult.msg); 
-                }
+                let submission = await submitCode({contestId: parseInt(params.contestId), file}); 
+
+                router.push(`/dashboard/contests/${params.contestId}/submissions`);    
             }
             catch (error){ 
-                alert(error); 
+                alertBackendAPIError(error, "SubmissionSubmitHandler"); 
             }
          }
          else { 

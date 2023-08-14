@@ -1,5 +1,6 @@
 "use client"; 
 
+import alertBackendAPIError from "@/app/utils/alertSystem/alertBackendAPIError";
 import { createGame } from "@/backend_api/games";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
@@ -30,19 +31,17 @@ export default function CreateGamePage() {
     async function onFormSubmit(event:FormEvent) {
         event.preventDefault(); 
 
-        const fetchResult = await createGame(
-            { 
+        try { 
+            await createGame({ 
                 name, 
                 statementUrl: statementURL, 
                 renderUrl: renderUrl
-            }
-        ); 
+            }); 
 
-        if(fetchResult.success) { 
             router.push("/dashboard/games/list"); 
         }
-        else { 
-            alert("Creating game failed. Error: " + fetchResult.msg); 
+        catch(error) { 
+             alertBackendAPIError(error, "contestCreateSubmitHandler"); 
         }
     }
 

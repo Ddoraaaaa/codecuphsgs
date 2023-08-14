@@ -6,6 +6,7 @@ import assert from "assert";
 import {FormEvent, useState} from "react"
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import alertBackendAPIError from "@/app/utils/alertSystem/alertBackendAPIError";
 
 
 export default function SignupPage() { 
@@ -30,27 +31,20 @@ export default function SignupPage() {
 
     async function handleSubmitButtonClicked(event: FormEvent) { 
         event.preventDefault();
+
         try { 
-            let signupResult = await signup({
+            const userInfo = await signup({
                 username: username, 
                 email: email, 
                 password: password
             }); 
-            if(signupResult.success) { 
-                assert(signupResult.userInfo != undefined); 
-                setUserInfo(signupResult.userInfo); 
-                try { 
-                    router.push("/dashboard"); 
-                } catch(error) { 
-                    alert(error); 
-                }
-            }
-            else { 
-                alert(signupResult.msg); 
-            }
+           
+            setUserInfo(userInfo); 
+            
+            router.push("/dashboard"); 
         }
         catch (error) { 
-            alert(error); 
+            alertBackendAPIError(error, "signupSubmitHandler"); 
         }
     }
 

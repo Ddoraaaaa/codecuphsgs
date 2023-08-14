@@ -1,19 +1,18 @@
 import { ContestDetailsI, getContestDetails } from "@/backend_api/contests";
 import { useEffect, useState } from "react";
 import assert from "assert";
+import alertBackendAPIError from "@/app/utils/alertSystem/alertBackendAPIError";
 export default function useContestDetails(initialContestId: number){ 
     const [contestId, setContestId] = useState(initialContestId); 
     const [contestDetails, setContestDetails] = useState<ContestDetailsI | null>(); 
    
     async function updateContestDetails() {
-        let fetchResult = await getContestDetails(initialContestId); 
-        if(fetchResult.success === false) { 
-            setContestDetails(null); 
-            alert(fetchResult.msg); 
-        }
-        else { 
-            assert(fetchResult.contestDetails != undefined); 
-            setContestDetails(fetchResult.contestDetails); 
+        try { 
+            const contestDetails = await getContestDetails(initialContestId); 
+
+            await setContestDetails(contestDetails); 
+        } catch(error: any) { 
+            alertBackendAPIError(error, "updating contest details"); 
         }
     }
     
