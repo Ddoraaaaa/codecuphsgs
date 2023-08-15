@@ -1,6 +1,6 @@
 "use client"; 
 
-import { ContestInfoI } from "@/backend_api/contests"
+import { ContestInfo } from "@/backend_api/contests"
 import { useState, useEffect, useContext } from "react"
 import Link from "next/link"
 import { displayMili } from "../helper"
@@ -10,7 +10,7 @@ import assert from "assert";
 function UpcomingContest({
     contestInfo
 }: { 
-    contestInfo: ContestInfoI
+    contestInfo: ContestInfo
 }): JSX.Element {
     const [beforeStart, setBeforeStart] = useState(displayMili(contestInfo.startDate.getTime() - (new Date().getTime())));
     useEffect(() => { 

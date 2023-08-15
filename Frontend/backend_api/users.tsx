@@ -1,33 +1,17 @@
-import { userInfoI } from '@/session_storage_api/api';
-import assert from 'assert';
+import { UserInfo } from '@/session_storage_api/api';
 
-async function logout(): Promise<{ 
-    success: boolean, 
-    msg: string
-}> {
-    try { 
-        // why is it not working? apparently await can escape try / catch block
-        let response = await fetch("/api/logout", 
-            { 
-                method: "POST", 
-            }
-        ); 
+import validateResponse from './validation_utils/validateResponse';
+import validateInfo from './validateUserInfo';
+import UnknownInternalError from './errors/unknownInternalError';
 
-        let success = response.ok;
-        let jsonResponse = await response.json(); 
-        let msg = jsonResponse.msg;  
-        console.log(jsonResponse); 
-        
-        return { 
-            success, 
-            msg, 
+async function logout() {
+    const response = await fetch("/api/logout", 
+        { 
+            method: "POST", 
         }
-    } catch(error: any) {
-        return { 
-            success: false, 
-            msg: error.toString()
-        }
-    }
+    ); 
+
+    const {status, body} = await validateResponse(response); 
 }
 
 async function signup({
@@ -38,48 +22,36 @@ async function signup({
     username: string | null, 
     password: string | null, 
     email: string | null, 
-}) : Promise<{
-    success: boolean, 
-    msg: string, 
-    userInfo?: userInfoI 
-}> { 
-    // cannot figure out the bug???? Just need to try catch!!!
-    try { 
-        // why is it not working? apparently await can escape try / catch block
-        let response = await fetch("/api/register", 
-            { 
-                method: "POST", 
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ 
-                    username: username, 
-                    email: email, 
-                    password: password
-                })
-            }
-        ); 
+}) : Promise<UserInfo> { 
+    // throw error if info not good
+    validateInfo({username, password, email}); 
 
-        let success = response.ok;
-        let jsonResponse = await response.json(); 
-        let msg = jsonResponse.msg;  
-        let user = jsonResponse.user; 
-        console.log(jsonResponse); 
-        
+    const response = await fetch("/api/register", 
+        { 
+            method: "POST", 
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                username: username, 
+                email: email, 
+                password: password
+            })
+        }
+    ); 
+
+    // throw fetchError if response validation fails...
+    const {status, body} = await validateResponse(response); 
+
+    try { 
         return { 
-            success, 
-            msg, 
-            userInfo: { 
-                userId: jsonResponse.user.id, 
-                username: jsonResponse.user.username, 
-                userIsAdmin: jsonResponse.user.isAdmin
-            }
+            userId: body.user.id, 
+            username: body.user.username, 
+            userIsAdmin: body.user.isAdmin
         }
     } catch(error: any) {
-        return { 
-            success: false, 
-            msg: error.toString()
-        }
+        console.error("Unknown error at signup API: " + error); 
+        throw new UnknownInternalError(); 
     }
 
 }
@@ -92,48 +64,36 @@ async function login({
     username: string | null, 
     password: string | null, 
     email: string | null, 
-}) : Promise<{
-    success: boolean, 
-    msg: string, 
-    userInfo?: userInfoI
-}> { 
-    // cannot figure out the bug???? Just need to try catch!!!
+}) : Promise<UserInfo> 
+{ 
+    validateInfo({username, password, email}); 
+
+    const response = await fetch("/api/login", 
+        { 
+            method: "POST", 
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                username: username, 
+                email: email, 
+                password: password
+            })
+        }
+    ); 
+
+    const {status, body} = await validateResponse(response); 
+
     try { 
-        let response = await fetch("/api/login", 
-            { 
-                method: "POST", 
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ 
-                    username: username, 
-                    email: email, 
-                    password: password
-                })
-            }
-        ); 
-        
-        let success = response.ok;
-        let jsonResponse = await response.json(); 
-        let msg = jsonResponse.msg;  
-        let user = jsonResponse.user; 
-        console.log(jsonResponse); 
-        
         return { 
-            success, 
-            msg, 
-            ...(success && {userInfo: { 
-                userId: jsonResponse.user.id, 
-                username: jsonResponse.user.username, 
-                userIsAdmin: jsonResponse.user.isAdmin
-            }})
+            userId: body.user.id, 
+            username: body.user.username, 
+            userIsAdmin: body.user.isAdmin
         }
     }
     catch(error: any) {
-        return { 
-            success: false, 
-            msg: "login failed"
-        }
+        console.error("Unknown error at login API: " + error); 
+        throw new UnknownInternalError(); 
     }
 
 }

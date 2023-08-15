@@ -11,7 +11,7 @@
 // /* basically the same, just different implmentation. However the first sol is much more neat */
 // /* only one hook -> singleton? */
 
-// interface userInfoI { 
+// interface UserInfo { 
 //     userId: number, 
 //     username: string, 
 //     userIsAdmin: boolean; 
@@ -19,10 +19,10 @@
 
 // class SharedUserInfoHook { 
 //     static instance: SharedUserInfoHook; 
-//     static userInfo: userInfoI | null; 
-//     static setUserInfo: Dispatch<SetStateAction<userInfoI | null>>
+//     static userInfo: UserInfo | null; 
+//     static setUserInfo: Dispatch<SetStateAction<UserInfo | null>>
 
-//     static getUserInfo(): userInfoI | null { 
+//     static getUserInfo(): UserInfo | null { 
 //         let userInfoString = sessionStorage.getItem('userInfo'); 
 //         if(userInfoString == null) { 
 //             return null; 
@@ -36,10 +36,10 @@
 //         }
 //         SharedUserInfoHook.instance = this; 
 //         [SharedUserInfoHook.userInfo, SharedUserInfoHook.setUserInfo] 
-//             = useState<userInfoI | null>(SharedUserInfoHook.getUserInfo()); 
+//             = useState<UserInfo | null>(SharedUserInfoHook.getUserInfo()); 
 //     }
 
-//     static saveUserInfo(userInfo: userInfoI | null) { 
+//     static saveUserInfo(userInfo: UserInfo | null) { 
 //         sessionStorage.setItem('userInfo', JSON.stringify(userInfo)); 
 //         SharedUserInfoHook.setUserInfo(userInfo); 
 //     }
