@@ -41,7 +41,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(sessionMiddleware); 
 
 // // REQUEST LOGGER
-// app.use(requestLoggerMiddleware);
+app.use(requestLoggerMiddleware);
 
 // ROUTERS
 app.use(userRouter); 
