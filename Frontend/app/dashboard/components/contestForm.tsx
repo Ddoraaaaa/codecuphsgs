@@ -146,7 +146,7 @@ export default function ContestInfoForm({callback, contestInfo}: {callback: Func
         </div>
         <div className="mt-6 flex items-center justify-center gap-x-6">
             {/* <button type="button" className="text-sm font-semibold leading-6 text-gray-900">Cancel</button> */}
-            <button type="submit" onClick = {onSubmitClicked} className="rounded-md bg-gray-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Create Contest</button>
+            <button type="submit" onClick = {onSubmitClicked} className="rounded-md bg-gray-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black">Create Contest</button>
         </div>
     </form>
     )
