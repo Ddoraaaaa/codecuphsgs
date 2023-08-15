@@ -5,8 +5,8 @@ async function createGame(req, res, next) {
         return res.status(401).send({msg: "User is not admin"}); 
     }
 
-    const game = await GameModel.create({
-        id: await GameModel.count() + 1, 
+    const game = await gameModel.create({
+        id: await gameModel.count() + 1, 
         name: req.body.name, 
         statementUrl: req.body.statementUrl, 
         renderUrl: req.body.renderUrl
@@ -40,7 +40,7 @@ function gameInfoUnrestrictedView(game) {
 }
 
 async function getAllGames(req, res, next) { 
-    const games = await GameModel.find(); 
+    const games = await gameModel.find(); 
     if(!req.session.userId || !req.session.isAdmin) { 
         return res.status(200).send({
             games: games.map(game => gameInfoRestrictedView(game)), 
@@ -62,7 +62,8 @@ async function getGame(req, res, next) {
         return res.status(401).send({msg: "GameId missing"}); 
     }
 
-    const game = await GameModel.findOne({
+
+    const game = await gameModel.findOne({
         id: gameId
     })
 
@@ -86,8 +87,10 @@ async function getGame(req, res, next) {
 
 }
 
-export { 
+const gameControler = { 
     getAllGames, 
     getGame,
     createGame, 
 }
+
+export default gameControler; 

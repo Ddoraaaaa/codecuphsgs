@@ -11,7 +11,6 @@ async function getSubmission({submissionId}) {
 async function createSubmission({contestId, userId, sourceUrl}) { 
     // validate inputs
     if(isNaN(contestId)) { 
-        console.log("type of contestId" + typeof(contestId))
         throw new ServiceError("contestId (" + contestId + ") is not a number"); 
     }
     if(isNaN(userId)) { 
@@ -29,7 +28,6 @@ async function createSubmission({contestId, userId, sourceUrl}) {
             userId, 
             sourceUrl
         }); 
-        console.log("submission id: " + submissionId + submissionDocument.id)
         return submissionDocument.toObject();  
     } 
     catch(err) { 

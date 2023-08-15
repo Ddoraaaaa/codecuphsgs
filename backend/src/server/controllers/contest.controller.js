@@ -33,13 +33,13 @@ async function getAllContests(req, res, next) {
 
 async function getContest(req, res, next) { 
     let contestId = req.params.contestId; // bug: params, not param
-
     if(contestId == null) { 
         return res.status(401).send({msg: "Missing parameters"}); 
     }
 
 
     try {
+        console.log(this); 
         let contest = await contestService.getContest(contestId); 
 
         if(!contest) { 
@@ -57,8 +57,9 @@ async function getContest(req, res, next) {
             contest
         })
     } catch(e) { 
-        return res.status(401).send({
-            msg: "Server Error " + e  
+        console.log("Error: " + e)
+        return res.status(500).send({
+            msg: "Internal Server Error"  
         }); 
     }
 }
@@ -132,7 +133,7 @@ function unrestrictedView(contest) {
     return contests;
 }
 
-export { 
+const contestController = { 
     createContest, 
     getAllContests, 
     getContest, 
@@ -140,3 +141,5 @@ export {
     createSubmission, 
     getContestResults, 
 }
+
+export default contestController; 

@@ -8,7 +8,6 @@ import {
 
 const gameRouter = Router(); 
 gameRouter.use((req, res, next) => { 
-    console.log("dlfjsdljfdslfjdsljfdkjdfk"); 
     next(); 
 })
 
