@@ -1,14 +1,22 @@
 import ServerError from "../errors/serverError";
 import UserError from "../errors/userError";
 import InternalError from "../errors/internalError";
-export default async function validateResponse(response: any) { 
+export default async function validateResponse(response: any, location: string = "unknown") { 
     const status = response.status; 
+
+    console.log("Validating response from server: "); 
+    console.log("Status: " + status); 
+
+    if(status === 404) { 
+        console.log("Received status 404"); 
+        throw new ServerError(); 
+    }
 
     let body; 
     try { 
         body = await response.json(); 
     } catch(error) { 
-        console.error("Error: Parsing json body failed at user API"); 
+        console.error("Error: Parsing json body failed at " + location); 
         throw new ServerError(); 
     }
 

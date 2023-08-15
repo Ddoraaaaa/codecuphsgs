@@ -61,11 +61,12 @@ export default function ContestsLayout({
     }, []); 
 
     return (
-        <ContestsInfoContext.Provider value={contestsInfo}>
-            <SectionHeader sectionTabs={sectionTabs}></SectionHeader>
-            {contestsInfo != null && <div className="w-full text-sm p-6">{children}</div>}
-            {contestsInfo == null && <div>Loading...</div>}
-        </ContestsInfoContext.Provider>
+        contestsInfo !== null? 
+            <ContestsInfoContext.Provider value={contestsInfo}>
+                <SectionHeader sectionTabs={sectionTabs}></SectionHeader>
+                <div className="w-full text-sm p-6">{children}</div>
+            </ContestsInfoContext.Provider>: 
+            <div>Loading...</div>
     )
 }
 

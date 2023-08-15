@@ -8,7 +8,6 @@ export default function ContestCreatePage() {
     const router = useRouter();
 
     async function onSubmit(contestInfo: Object) { 
-        console.log(contestInfo)
         try { 
             await createContest(contestInfo); 
             router.push("/dashboard/contests/upcoming"); 

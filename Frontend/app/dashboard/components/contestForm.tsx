@@ -73,7 +73,7 @@ export default function ContestInfoForm({callback, contestInfo}: {callback: Func
                 <div className="sm:col-span-3">
                     <label className="block text-sm font-medium leading-6 text-gray-900">Name</label>
                     <div className="mt-2">
-                        <input type="text" onChange={onNameChange} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <input type="text" onChange={onNameChange} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6">
                             {contestInfo?.contestName}
                         </input>
                     </div>
@@ -82,7 +82,7 @@ export default function ContestInfoForm({callback, contestInfo}: {callback: Func
                 <div className="col-span-full">
                     <label className="block text-sm font-medium leading-6 text-gray-900">Overview</label>
                     <div className="mt-2">
-                        <textarea onChange={onOverviewChange} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <textarea onChange={onOverviewChange} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6">
                             {contestInfo?.overview}
                         </textarea>
                     </div>
@@ -118,7 +118,7 @@ export default function ContestInfoForm({callback, contestInfo}: {callback: Func
                 <div className="sm:col-span-3">
                     <label  className="block text-sm font-medium leading-6 text-gray-900">Game ID</label>
                     <div className="mt-2">
-                        <input type="text" name="last-name" id="last-name" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></input>
+                        <input type="text" name="last-name" id="last-name" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"></input>
                     </div>
                 </div>
                 <div className="sm:col-span-3">
@@ -146,7 +146,7 @@ export default function ContestInfoForm({callback, contestInfo}: {callback: Func
         </div>
         <div className="mt-6 flex items-center justify-center gap-x-6">
             {/* <button type="button" className="text-sm font-semibold leading-6 text-gray-900">Cancel</button> */}
-            <button type="submit" onClick = {onSubmitClicked} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Create Contest</button>
+            <button type="submit" onClick = {onSubmitClicked} className="rounded-md bg-gray-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Create Contest</button>
         </div>
     </form>
     )
