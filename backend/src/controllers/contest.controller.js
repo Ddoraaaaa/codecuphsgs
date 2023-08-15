@@ -1,6 +1,5 @@
-import sourceCodeUpload from "../middlewares/upload";
+import sourceCodeUpload from "../middlewares/multerSingleFileUpload";
 import * as contestService from "../services/contest.service";
-import * as submissionService from "../services/submission.service"; 
 
 async function createContest(req, res, next) { 
     console.log(req.session.userId)
@@ -97,10 +96,8 @@ async function deleteContest(req, res, next) {
     }
 }
 
-async function submitToContest(req, res, next) { 
-    let contestId = req.params.contestId; 
-
-    if(!contestId) { 
+async function createSubmission(req, res, next) { 
+    if(!req.params.contestId) { 
         return res.status(401).send({err: "Missing contestId"}); 
     }
 
@@ -109,31 +106,27 @@ async function submitToContest(req, res, next) {
         return res.status(401).send({err: "Not logged in"}); 
     }
 
-    sourceCodeUpload(req, res, (error) => { 
-        // if (error instanceof multer.MulterError) {
-        //     throw(error); 
-        //     return res.status(200).send({msg: "Server error"}); 
-        // } else 
-        if (error) {
-            console.error("errorOR: " + erroror); 
-            throw(error); 
-            return res.status(200).send({msg: "Server error"}); 
-        }
-    }); 
+    if(!req.file){ 
+        // either it is to be saved, or the response has to be returned by upload middleware
+        console.error("No file found"); 
+        return res.status(500).send({msg: "Internal Server Error"}); 
+    }
 
-    console.log("Files in request: " + req.files); 
+    console.log(req.file); 
+    const contestId = parseInt(req.params.contestId); 
+    const sourceUrl = req.file.path; 
 
-    const serviceResponse = await contestService.createSubmission({ 
-        contestId: contestId, 
-        userId: req.session.userId, 
-        sourceUrl: ""
-    }); 
+    try {
+        const serviceResponse = await contestService.createSubmission({ 
+            contestId, 
+            userId: req.session.userId, 
+            sourceUrl
+        }); 
 
-    if(serviceResponse.success) { 
         return res.status(200).send({msg: "Submitted successfully"}); 
-    } 
-    else {
-        return res.status(401).send({err: serviceResponse.err});
+    } catch (err){
+        console.error("Error at submitToContest Controller: " + err); 
+        return res.status(401).send({err: "Internal Server Error"});
     }
 }
 
@@ -160,6 +153,6 @@ export {
     getAllContests, 
     getContest, 
     deleteContest, 
-    submitToContest, 
+    createSubmission, 
     getContestResults, 
 }

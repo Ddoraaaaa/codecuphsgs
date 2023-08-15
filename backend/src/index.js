@@ -40,8 +40,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // SESSION MIDDLEWARE
 app.use(sessionMiddleware); 
 
-// REQUEST LOGGER
-app.use(requestLoggerMiddleware);
+// // REQUEST LOGGER
+// app.use(requestLoggerMiddleware);
 
 // ROUTERS
 app.use(userRouter); 

@@ -8,7 +8,5 @@ const gameSchema = new Schema({
     renderUrl: {type: String, required: true}, 
 })
 
-const gameModel = model('game', gameSchema)
-export { 
-    gameModel
-}
+const GameModel = model('game', gameSchema)
+export default GameModel; 

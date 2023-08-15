@@ -3,7 +3,7 @@ import { Schema, model } from "mongoose";
 const submissionSchema = new Schema ({ 
     id: {type: Number}, 
     userId: {type: Number}, 
-    contestId: {type: String}, 
+    contestId: {type: Number}, 
     submissionDate: {type: Date, default: () => new Date()}, 
     language: {type: String, default: "cpp"}, 
     sourceUrl: {type: String}, 

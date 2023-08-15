@@ -1,4 +1,5 @@
 "use client"; 
+import alertBackendAPIError from '@/app/utils/alertSystem/alertBackendAPIError';
 import ContestInfoForm from '../../components/contestForm';
 import { createContest } from '@/backend_api/contests';
 import { useRouter } from 'next/navigation';
@@ -7,17 +8,12 @@ export default function ContestCreatePage() {
     const router = useRouter();
 
     async function onSubmit(contestInfo: Object) { 
-        console.log(contestInfo)
-        const {success, msg} = await createContest(contestInfo); 
-        if(!success) { 
-            alert(msg); 
+        try { 
+            await createContest(contestInfo); 
+            router.push("/dashboard/contests/upcoming"); 
         }
-        else { 
-            try {
-                router.push("/dashboard/contests/upcoming"); 
-            } catch(e) { 
-                alert(e); 
-            }
+        catch(e) { 
+            alertBackendAPIError(e, "contestCreateSubmitHandler"); 
         }
     }
 
