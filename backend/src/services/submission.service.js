@@ -1,4 +1,3 @@
-import assert from "assert";
 import SubmissionModel from "../models/submission.model";
 import ServiceError from "./errors/serviceError";
 import { MongooseError } from "mongoose";
@@ -45,7 +44,9 @@ async function createSubmission({contestId, userId, sourceUrl}) {
     }
 }
 
-export { 
+const submissionService = { 
     getSubmission, 
     createSubmission
 }
+
+export default submissionService; 

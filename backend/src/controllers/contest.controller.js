@@ -1,5 +1,5 @@
 import sourceCodeUpload from "../middlewares/multerSingleFileUpload";
-import * as contestService from "../services/contest.service";
+import contestService from "../services/contest.service";
 
 async function createContest(req, res, next) { 
     console.log(req.session.userId)

@@ -75,7 +75,9 @@ async function getUser({
     }
 }
 
-export { 
+const userService = { 
     createUser,
     getUser
 }
+
+export default userService; 

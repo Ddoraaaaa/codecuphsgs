@@ -1,6 +1,6 @@
 import UserModel from "../models/user.model"
 import ValidationError from "../services/errors/validationError";
-import * as userService from "../services/user.service"
+import userService from "../services/user.service"
 import { userInfoRestrictedView, userInfoUnrestrictedView } from "../utils/user";
 
 async function createUser(req, res, next) { 

@@ -158,7 +158,7 @@ async function setCurrentState(contestId, currentStateString) {
     await ContestModel.updateOne({id: contestId}, {currentState: currentStateString}); 
 }
 
-export { 
+const contestService = { 
     getAllEndedUnjudgedContest, 
     getAllContests, 
     createContest, 
@@ -173,3 +173,5 @@ export {
     getCurrentState, 
     setCurrentState
 }
+
+export default contestService; 
