@@ -4,7 +4,7 @@ import {
     createGame,
     getAllGames,
     getGame 
-} from "../services/game.service"
+} from "../controllers/game.controller"
 
 const gameRouter = Router(); 
 gameRouter.use((req, res, next) => { 
