@@ -1,10 +1,10 @@
-import { ContestDetailsI, getContestDetails } from "@/backend_api/contests";
+import { ContestDetails, getContestDetails } from "@/backend_api/contests";
 import { useEffect, useState } from "react";
 import assert from "assert";
 import alertBackendAPIError from "@/app/utils/alertSystem/alertBackendAPIError";
 export default function useContestDetails(initialContestId: number){ 
     const [contestId, setContestId] = useState(initialContestId); 
-    const [contestDetails, setContestDetails] = useState<ContestDetailsI | null>(); 
+    const [contestDetails, setContestDetails] = useState<ContestDetails | null>(); 
    
     async function updateContestDetails() {
         try { 

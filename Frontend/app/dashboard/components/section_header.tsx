@@ -1,16 +1,16 @@
 "use client"; 
 
-import { getUserInfo, userInfoI } from "@/session_storage_api/api";
+import { getUserInfo, UserInfo } from "@/session_storage_api/api";
 import hsgs_logo from "../../public/logo.png"
 import SectionTab from "./section_tab";
-import { sectionTabI } from "./section_tab";
+import { SectionTabData } from "./section_tab";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 
 export default function SectionHeader({
     sectionTabs
 }: { 
-    sectionTabs: sectionTabI[]
+    sectionTabs: SectionTabData[]
 }): JSX.Element { 
     const userInfo = getUserInfo(); 
 

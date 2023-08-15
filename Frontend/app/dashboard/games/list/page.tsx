@@ -1,14 +1,14 @@
 "use client";
 
 import alertBackendAPIError from "@/app/utils/alertSystem/alertBackendAPIError";
-import { GameInfoI, getAllGamesInfo } from "@/backend_api/games";
+import { GameInfo, getAllGamesInfo } from "@/backend_api/games";
 import { useEffect, useState } from "react";
 
  
 
 export default function GameListPage() {
 
-    const [gameInfos, setGameInfos] = useState<null | Array<GameInfoI> >(null); 
+    const [gameInfos, setGameInfos] = useState<null | Array<GameInfo> >(null); 
 
     async function fetchGameInfo() {
         try { 

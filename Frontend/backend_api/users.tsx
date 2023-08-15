@@ -1,4 +1,4 @@
-import { userInfoI } from '@/session_storage_api/api';
+import { UserInfo } from '@/session_storage_api/api';
 
 import validateResponse from './validation_utils/validateResponse';
 import validateInfo from './validateUserInfo';
@@ -22,7 +22,7 @@ async function signup({
     username: string | null, 
     password: string | null, 
     email: string | null, 
-}) : Promise<userInfoI> { 
+}) : Promise<UserInfo> { 
     // throw error if info not good
     validateInfo({username, password, email}); 
 
@@ -64,7 +64,7 @@ async function login({
     username: string | null, 
     password: string | null, 
     email: string | null, 
-}) : Promise<userInfoI> 
+}) : Promise<UserInfo> 
 { 
     validateInfo({username, password, email}); 
 

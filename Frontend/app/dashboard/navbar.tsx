@@ -1,6 +1,6 @@
 "use client"; 
 
-import { userInfoI } from "@/session_storage_api/api";
+import { UserInfo } from "@/session_storage_api/api";
 import hsgs_logo from "../../public/logo.png"
 import Image from "next/image";
 import Link from "next/link";
@@ -8,7 +8,7 @@ import NavBarSection from "./navbarSection";
 export default function NavBar({
     userInfo
 }: { 
-    userInfo: userInfoI | null
+    userInfo: UserInfo | null
 }): JSX.Element { 
     return (
         <nav className="h-full w-full flex-col items-center justify-start text-white text-sm bg-black overflow-hidden" >

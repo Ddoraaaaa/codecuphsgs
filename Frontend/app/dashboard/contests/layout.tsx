@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import SectionHeader from "../components/section_header";
 import { useLayoutEffect, useState } from "react";
 import { createContext } from "react";
-import { ContestInfoI, getAllContests } from "@/backend_api/contests";
+import { ContestInfo, getAllContests } from "@/backend_api/contests";
 import alertBackendAPIError from "@/app/utils/alertSystem/alertBackendAPIError";
 
 const sectionTabs = [
@@ -30,7 +30,7 @@ const sectionTabs = [
     }
 ]
 
-const ContestsInfoContext = createContext<ContestInfoI[] | null>(null); 
+const ContestsInfoContext = createContext<ContestInfo[] | null>(null); 
 
 export default function ContestsLayout({
     children
@@ -40,7 +40,7 @@ export default function ContestsLayout({
 
     /* put the contestsInfo here to reduce the number of fetch request. 
     Persist until rerender contest page / reload */
-    const [contestsInfo, setContestsInfo] = useState<ContestInfoI[] | null> (null); 
+    const [contestsInfo, setContestsInfo] = useState<ContestInfo[] | null> (null); 
 
     async function refetchContestsInfo() { 
         try { 

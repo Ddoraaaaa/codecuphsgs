@@ -3,7 +3,7 @@ import { getUserInfo } from "@/session_storage_api/api"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
-interface sectionTabI{ 
+interface SectionTabData{ 
     href: string, 
     title: string, 
     adminRequired: boolean
@@ -13,7 +13,7 @@ export default function SectionTab({
     sectionTab, 
     selected, 
 }: { 
-    sectionTab: sectionTabI, 
+    sectionTab: SectionTab, 
     selected: boolean, 
 }): JSX.Element { 
     const router = useRouter(); 
@@ -31,5 +31,5 @@ export default function SectionTab({
 }
 
 export type { 
-    sectionTabI
+    SectionTabData
 }

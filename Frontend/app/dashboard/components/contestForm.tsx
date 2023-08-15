@@ -1,4 +1,4 @@
-import { ContestFormat, ContestInfoI, JudgeMode } from "@/backend_api/contests";
+import { ContestFormat, ContestInfo, JudgeMode } from "@/backend_api/contests";
 import { FormEvent, useState } from "react";
 import { JsxElement } from "typescript";
 
@@ -13,7 +13,7 @@ const getEnumKeys = <T extends Object>(enumToDeconstruct: T): Array<keyof typeof
 
 console.log(getEnumKeys(ContestFormat)); 
 
-export default function ContestInfoForm({callback, contestInfo}: {callback: Function, contestInfo: ContestInfoI | null}): JSX.Element {
+export default function ContestInfoForm({callback, contestInfo}: {callback: Function, contestInfo: ContestInfo | null}): JSX.Element {
     const [name, setName] = useState(contestInfo?.contestName); 
     const [overview, setOverview] = useState(contestInfo?.overview); 
     const [startDate, setStartDate] = useState(contestInfo?.startDate);

@@ -15,7 +15,7 @@ enum JudgeMode {
     AUTO_JUDGE = "auto-judge"
 }
 
-interface ContestInfoI { 
+interface ContestInfo { 
     contestId: number, 
     contestName: string, 
     overview: string, 
@@ -26,7 +26,7 @@ interface ContestInfoI {
     judgeMode: JudgeMode, 
 }
 
-interface ContestDetailsI { 
+interface ContestDetails { 
     contestId: number, 
     contestName: string, 
     startDate: Date, 
@@ -37,7 +37,7 @@ interface ContestDetailsI {
     gameRenderUrl: string
 }
 
-interface SubmissionInfoI { 
+interface SubmissionInfo { 
     submissionId: number, 
     contestId: number, 
     userId: number
@@ -68,7 +68,7 @@ async function createContest(contestInfo:Object) : Promise<{
     }
 }
 
-async function getAllContests() : Promise<ContestInfoI[]>{  
+async function getAllContests() : Promise<ContestInfo[]>{  
     const response = await fetch("/api/contests", 
         { 
             method: "GET"
@@ -94,7 +94,7 @@ async function getAllContests() : Promise<ContestInfoI[]>{
 
 async function getContestDetails(
     contestId: number
-): Promise<ContestDetailsI> { 
+): Promise<ContestDetails> { 
     const response = await fetch("/api/contest/" + contestId, 
         { 
             method: "GET"
@@ -137,7 +137,7 @@ async function submitCode({
 }:{ 
     contestId: number, 
     file: File
-}): Promise<SubmissionInfoI> {
+}): Promise<SubmissionInfo> {
     if(!file) { 
         throw new ValidationError("File missing"); 
     }
@@ -180,9 +180,9 @@ async function getResult(contestId:Number) {
 }
 
 export type {  
-    ContestInfoI, 
-    ContestDetailsI, 
-    SubmissionInfoI
+    ContestInfo, 
+    ContestDetails, 
+    SubmissionInfo
 }
 
 export { 

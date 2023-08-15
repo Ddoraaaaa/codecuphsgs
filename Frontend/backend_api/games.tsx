@@ -3,7 +3,7 @@ import UnknownInternalError from "./errors/unknownInternalError";
 import ValidationError from "./errors/validationError";
 import validateResponse from "./validation_utils/validateResponse"
 
-interface GameInfoI { 
+interface GameInfo { 
     id: number, 
     name: string, 
     statementUrl: string, 
@@ -50,7 +50,7 @@ async function createGame({
 
 async function getGameInfo(
     gameId: number
-): Promise<GameInfoI> {
+): Promise<GameInfo> {
 
     if(typeof gameId != "number") { 
         throw new ValidationError("type of gameId is not number"); 
@@ -75,7 +75,7 @@ async function getGameInfo(
     }
 }
 
-async function getAllGamesInfo(): Promise<Array<GameInfoI>>{
+async function getAllGamesInfo(): Promise<Array<GameInfo>>{
     const response = await fetch(`/api/games`, { // hudge mistake: api/games -> /api/games!!!!!
         method: "GET"
     }); 
@@ -107,5 +107,5 @@ export {
 }
 
 export type { 
-    GameInfoI
+    GameInfo
 }
