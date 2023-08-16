@@ -1,6 +1,6 @@
-import UserModel from "../models/user.model";
-import { userInfoRestrictedView, userInfoUnrestrictedView } from "../utils/user";
-const bcrypt = require("bcrypt"); 
+import UserModel from "../models/user.model.js";
+import { userInfoRestrictedView, userInfoUnrestrictedView } from "../utils/user.js";
+import bcrypt from "bcrypt"; 
 
 async function createSession(req, res, next) {    
     let username = req.body.username; 

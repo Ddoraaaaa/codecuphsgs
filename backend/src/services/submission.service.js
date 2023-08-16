@@ -1,11 +1,13 @@
-import SubmissionModel from "../models/submission.model";
-import ServiceError from "./errors/serviceError";
-import { MongooseError } from "mongoose";
-import DatabaseError from "./errors/databaseError";
-import UnknownInternalError from "./errors/unknownInternalError";
+import SubmissionModel from "../models/submission.model.js";
+import ServiceError from "./errors/serviceError.js";
+import UnknownInternalError from "./errors/unknownInternalError.js";
 
-async function getSubmission({submissionId}) { 
-    return (await SubmissionModel.findOne({id: submissionId})).toObject(); 
+async function getSubmission({id}) { 
+    console.log("Contest Service: Fetching data for submission #" +  id); 
+    const submissionDocument = await SubmissionModel.findOne({id}); 
+    console.log("Contest Service: Data for submission #" + id); 
+    console.log(submissionDocument); 
+    return submissionDocument.toObject(); 
 }
 
 async function createSubmission({contestId, userId, sourceUrl}) { 
@@ -28,17 +30,18 @@ async function createSubmission({contestId, userId, sourceUrl}) {
             userId, 
             sourceUrl
         }); 
+
         return submissionDocument.toObject();  
     } 
     catch(err) { 
         console.err("Error at createSubmissionService: " + err); 
 
-        if(err instanceof MongooseError) { 
-            throw new DatabaseError("Database error"); 
-        }
-        else { 
+        // if(err instanceof MongooseError) { 
+        //     throw new DatabaseError("Database error"); 
+        // }
+        // else { 
             throw new UnknownInternalError(); 
-        }
+        // }
     }
 }
 

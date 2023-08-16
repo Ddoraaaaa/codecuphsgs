@@ -1,5 +1,5 @@
-import sourceCodeUpload from "../middlewares/multerSingleFileUpload";
-import contestService from "../services/contest.service";
+import sourceCodeUpload from "../middlewares/multerSingleFileUpload.js";
+import contestService from "../services/contest.service.js";
 
 async function createContest(req, res, next) { 
     if(!req.session.isAdmin) { 

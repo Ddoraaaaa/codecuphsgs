@@ -1,4 +1,4 @@
-import multerSingleFileUpload from "./multerSingleFileUpload";
+import multerSingleFileUpload from "./multerSingleFileUpload.js";
 
 export default function uploadSourceCodeMiddleware(req, res, next) { 
     multerSingleFileUpload(req, res, function (error) { 

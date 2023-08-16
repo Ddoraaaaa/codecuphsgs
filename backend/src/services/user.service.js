@@ -1,10 +1,10 @@
-import mongoose, { MongooseError } from "mongoose";
-import UserModel from "../models/user.model"
+import mongoose from "mongoose";
+import UserModel from "../models/user.model.js"
 import bcrypt from "bcrypt"
-import DatabaseError from "./errors/databaseError";
-import UnknownInternalError from "./errors/unknownInternalError";
-import ValidationError from "./errors/validationError";
-import ServiceError from "./errors/serviceError";
+import DatabaseError from "./errors/databaseError.js";
+import UnknownInternalError from "./errors/unknownInternalError.js";
+import ValidationError from "./errors/validationError.js";
+import ServiceError from "./errors/serviceError.js";
 
 // throws serviceError.
 async function createUser({ 
@@ -39,12 +39,12 @@ async function createUser({
         console.error("Error encountered at createUser service: " + err); 
 
         // abstract away specific service error
-        if(err instanceof MongooseError) {
-            throw new DatabaseError("Database Error"); 
-        }
-        else { 
+        // if(err instanceof MongooseError) {
+        //     throw new DatabaseError("Database Error"); 
+        // }
+        // else { 
             throw new UnknownInternalError();  
-        }
+        // }
     }
 }
 
@@ -66,12 +66,12 @@ async function getUser({
         // log the error
         console.error("Error encountered at createUser service: " + err); 
 
-        if(err instanceof MongooseError) {
-            throw new DatabaseError("Database Error"); 
-        }
-        else { 
+        // if(err instanceof MongooseError) {
+        //     throw new DatabaseError("Database Error"); 
+        // }
+        // else { 
             throw new UnknownInternalError();  
-        }
+        // }
     }
 }
 

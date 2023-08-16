@@ -1,4 +1,4 @@
-import GameModel from "../models/game.model";
+import GameModel from "../models/game.model.js";
 
 async function createGame(req, res, next) { 
     if(!req.session.userId || !req.session.isAdmin) { 
