@@ -7,8 +7,8 @@ async function createGame(req, res, next) {
 
     console.log(req.body); 
 
-    const game = await gameModel.create({
-        id: await gameModel.count() + 1, 
+    const game = await GameModel.create({
+        id: await GameModel.count() + 1, 
         name: req.body.name, 
         statementUrl: req.body.statementUrl, 
         renderUrl: req.body.renderUrl
@@ -44,7 +44,7 @@ function gameInfoUnrestrictedView(game) {
 }
 
 async function getAllGames(req, res, next) { 
-    const games = await gameModel.find(); 
+    const games = await GameModel.find(); 
     if(!req.session.userId || !req.session.isAdmin) { 
         return res.status(200).send({
             games: games.map(game => gameInfoRestrictedView(game)), 
@@ -68,7 +68,7 @@ async function getGame(req, res, next) {
 
     console.log(gameId)
 
-    const game = await gameModel.findOne({
+    const game = await GameModel.findOne({
         id: gameId
     })
 
