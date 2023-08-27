@@ -16,14 +16,11 @@ export default function SectionHeader({
 
     const pathName = usePathname(); 
 
-    const sectionTabFiltered = sectionTabs.filter(sectionTab => !sectionTab.adminRequired || (userInfo && userInfo.userIsAdmin)); 
-    console.log(sectionTabFiltered); 
-
     return (
             // {/* If length is not converted to String -> lead to bug, I do not reall know why */}
         <nav className={`h-10 w-full grid grid-cols-12 items-center bg-gray-400`}>            
             {
-                sectionTabFiltered.map((sectionTab, index) => 
+                sectionTabs.map((sectionTab, index) => 
                     <SectionTab 
                         key={index}
                         selected={pathName === sectionTab.href} 

@@ -4,6 +4,10 @@ import { ReactNode } from "react";
 import SectionHeader from "../../components/section_header";
 import { useParams } from "next/navigation";
 import SubsectionBodyContainer from "../../components/subsectionBodyContainer";
+import { getUserInfo } from "@/session_storage_api/api";
+
+
+
 export default function ContestDetailsLayout({
     children
 }: { 
@@ -12,6 +16,7 @@ export default function ContestDetailsLayout({
     const params = useParams(); // wait is this even possible
     // so useParams is different from useSearchParams. 
     const path = "/dashboard/contest/" + params.contestId
+    const userInfo = getUserInfo(); 
 
     const sectionTabs = [
         { 
@@ -41,10 +46,18 @@ export default function ContestDetailsLayout({
             adminRequired: true, 
         }
     ]; 
+
+    const sectionTabsFiltered = sectionTabs.filter((sectionTab) => { 
+        if(sectionTab.adminRequired && userInfo?.userIsAdmin == false) { 
+            return false; 
+        }
+
+        return true; 
+    }); 
     
     return (
         <div className="w-full">
-            <SectionHeader sectionTabs={sectionTabs}></SectionHeader>
+            <SectionHeader sectionTabs={sectionTabsFiltered}></SectionHeader>
             <SubsectionBodyContainer>{children}</SubsectionBodyContainer>
         </div>
     )
