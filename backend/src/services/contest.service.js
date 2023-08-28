@@ -1,5 +1,5 @@
 import ContestModel from "../models/contest.model.js";
-import * as submissionService from "../services/submission.service.js" 
+import submissionService from "../services/submission.service.js" 
 import ServiceError from "./errors/serviceError.js";
 import ValidationError from "./errors/validationError.js";
 import DatabaseError from "./errors/databaseError.js";

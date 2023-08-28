@@ -1,6 +1,6 @@
 import { Router } from "express";
-import * as contestController from "../controllers/contest.controller"
-import userCodeUpload from "../middlewares/userCodeUpload";
+import * as contestController from "../controllers/contest.controller.js"
+import userCodeUpload from "../middlewares/userCodeUpload.js";
 
 const contestRouter = Router(); 
 

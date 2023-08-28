@@ -6,8 +6,7 @@ import {
     getGame 
 } from "../controllers/game.controller.js"
 
-import gameFilesUpload from "../middlewares/gameJudgeUpload";
-
+import gameFilesUpload from "../middlewares/gameJudgeUpload.js"
 const gameRouter = Router(); 
 
 gameRouter.get("/game/:gameId", getGame); 

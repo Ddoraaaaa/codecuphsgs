@@ -1,6 +1,6 @@
 
 import multer from "multer";
-import storageEngine from "./multerStorage";
+import storageEngine from "./multerStorage.js";
 
 
 //  multer({ storageEngine }) -> BUGG
