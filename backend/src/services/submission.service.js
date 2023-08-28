@@ -1,18 +1,18 @@
-import assert from "assert";
-import SubmissionModel from "../models/submission.model";
-import ServiceError from "./errors/serviceError";
-import { MongooseError } from "mongoose";
-import DatabaseError from "./errors/databaseError";
-import UnknownInternalError from "./errors/unknownInternalError";
+import SubmissionModel from "../models/submission.model.js";
+import ServiceError from "./errors/serviceError.js";
+import UnknownInternalError from "./errors/unknownInternalError.js";
 
-async function getSubmission({submissionId}) { 
-    return (await SubmissionModel.findOne({id: submissionId})).toObject(); 
+async function getSubmission({id}) { 
+    console.log("Contest Service: Fetching data for submission #" +  id); 
+    const submissionDocument = await SubmissionModel.findOne({id}); 
+    console.log("Contest Service: Data for submission #" + id); 
+    console.log(submissionDocument); 
+    return submissionDocument.toObject(); 
 }
 
 async function createSubmission({contestId, userId, sourceUrl}) { 
     // validate inputs
     if(isNaN(contestId)) { 
-        console.log("type of contestId" + typeof(contestId))
         throw new ServiceError("contestId (" + contestId + ") is not a number"); 
     }
     if(isNaN(userId)) { 
@@ -30,22 +30,24 @@ async function createSubmission({contestId, userId, sourceUrl}) {
             userId, 
             sourceUrl
         }); 
-        console.log("submission id: " + submissionId + submissionDocument.id)
+
         return submissionDocument.toObject();  
     } 
     catch(err) { 
         console.err("Error at createSubmissionService: " + err); 
 
-        if(err instanceof MongooseError) { 
-            throw new DatabaseError("Database error"); 
-        }
-        else { 
+        // if(err instanceof MongooseError) { 
+        //     throw new DatabaseError("Database error"); 
+        // }
+        // else { 
             throw new UnknownInternalError(); 
-        }
+        // }
     }
 }
 
-export { 
+const submissionService = { 
     getSubmission, 
     createSubmission
 }
+
+export default submissionService; 

@@ -1,12 +1,8 @@
 
-import dotenv from "dotenv"; 
+import "./dotenv.js"; 
 
-// load env variables
-console.log("NODE_ENV: " + process.env.NODE_ENV)
-
-if(process.env.NODE_ENV === "dev") {
-    dotenv.config({path: '.env.' + process.env.NODE_ENV})
-}
+console.log("ENV: ")
+console.log(process.env); 
 
 import mongoose from "mongoose"; 
 
@@ -14,41 +10,19 @@ import mongoose from "mongoose";
 mongoose.set('strictQuery', true);
 mongoose.connect(process.env.MONGODB_URI)
 
-import express from "express";
-import cors from "cors"
-import bodyParser from "body-parser";
+import app from "./server/index.js";
+import contestPostEndingProcessor from "./worker/index.js";
 
-import sessionMiddleware from "./middlewares/sessionMiddleware.js";
-import requestLoggerMiddleware from "./middlewares/requestLoggerMiddleware.js";
-
-import userRouter from "./routers/user.router";
-import gameRouter from "./routers/game.router";
-import contestRouter from "./routers/contest.router";
-
-const app = express();
-
-// CORS MIDDLEWARE
-app.use(cors()); 
-
-// PARSING REQUESTS
-// parsing application/json
-app.use(bodyParser.json()); 
-
-// for parsing application/xwww-
-app.use(bodyParser.urlencoded({ extended: true })); 
-
-// SESSION MIDDLEWARE
-app.use(sessionMiddleware); 
-
-// // REQUEST LOGGER
-// app.use(requestLoggerMiddleware);
-
-// ROUTERS
-app.use(userRouter); 
-app.use(contestRouter); 
-app.use(gameRouter); 
+contestPostEndingProcessor.start(); 
 
 // START LISTENING
 const server = app.listen(5000, () => { 
     console.log("server on"); 
 })
+
+// tests
+import judgeAPIWrapper from "./worker/judgeAPIWrapper.js";
+
+judgeAPIWrapper.on("ready", () => { 
+    judgeAPIWrapper.submit(13, 13); 
+}); 

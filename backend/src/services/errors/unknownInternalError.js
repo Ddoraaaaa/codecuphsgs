@@ -1,4 +1,4 @@
-import InternalError from "./internalError";
+import InternalError from "./internalError.js";
 
 export default class UnknownInternalError extends InternalError { 
     constructor() {

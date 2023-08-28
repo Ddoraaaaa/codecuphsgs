@@ -1,10 +1,9 @@
-import { MongooseError } from "mongoose";
-import ContestModel from "../models/contest.model";
-import * as submissionService from "../services/submission.service" 
-import ServiceError from "./errors/serviceError";
-import ValidationError from "./errors/validationError";
-import DatabaseError from "./errors/databaseError";
-import UnknownInternalError from "./errors/unknownInternalError";
+import ContestModel from "../models/contest.model.js";
+import * as submissionService from "../services/submission.service.js" 
+import ServiceError from "./errors/serviceError.js";
+import ValidationError from "./errors/validationError.js";
+import DatabaseError from "./errors/databaseError.js";
+import UnknownInternalError from "./errors/unknownInternalError.js";
 
 async function getAllEndedUnjudgedContest() { 
     return Array.from(
@@ -112,12 +111,12 @@ async function createSubmission({
     } 
     catch(err) {
         console.error("Error at createSubmission service: " + err); 
-        if(err instanceof MongooseError) { 
-            throw new DatabaseError("Database error"); 
-        }
-        else { 
+        // if(err instanceof MongooseError) { 
+        //     throw new DatabaseError("Database error"); 
+        // }
+        // else { 
             throw new UnknownInternalError(); 
-        }
+        // }
     }
 }
 
@@ -169,7 +168,7 @@ async function setCurrentState(contestId, currentStateString) {
     await ContestModel.updateOne({id: contestId}, {currentState: currentStateString}); 
 }
 
-export { 
+const contestService = { 
     getAllEndedUnjudgedContest, 
     getAllContests, 
     createContest, 
@@ -184,3 +183,5 @@ export {
     getCurrentState, 
     setCurrentState
 }
+
+export default contestService; 

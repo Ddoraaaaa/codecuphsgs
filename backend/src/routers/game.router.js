@@ -4,7 +4,7 @@ import {
     createGame,
     getAllGames,
     getGame 
-} from "../controllers/game.controller"
+} from "../controllers/game.controller.js"
 
 import gameFilesUpload from "../middlewares/gameJudgeUpload";
 

@@ -1,7 +1,7 @@
-import UserModel from "../models/user.model"
-import ValidationError from "../services/errors/validationError";
-import * as userService from "../services/user.service"
-import { userInfoRestrictedView, userInfoUnrestrictedView } from "../utils/user";
+import UserModel from "../models/user.model.js"
+import ValidationError from "../services/errors/validationError.js";
+import userService from "../services/user.service.js"
+import { userInfoRestrictedView, userInfoUnrestrictedView } from "../utils/user.js";
 
 async function createUser(req, res, next) { 
     const {username, email, password} = req.body;
