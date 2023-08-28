@@ -1,4 +1,3 @@
-import sourceCodeUpload from "../middlewares/multerSingleFileUpload";
 import * as contestService from "../services/contest.service";
 
 async function createContest(req, res, next) { 
@@ -113,13 +112,13 @@ async function createSubmission(req, res, next) {
     const sourceUrl = req.file.path; 
 
     try {
-        const serviceResponse = await contestService.createSubmission({ 
+        const insertedSubmission = await contestService.createSubmission({ 
             contestId, 
             userId: req.session.userId, 
             sourceUrl
         }); 
 
-        return res.status(200).send({msg: "Submitted successfully"}); 
+        return res.status(200).send({submission: insertedSubmission}); 
     } catch (err){
         console.error("Error at submitToContest Controller: " + err); 
         return res.status(500).send({err: "Internal Server Error"});

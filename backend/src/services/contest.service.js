@@ -91,6 +91,7 @@ async function createSubmission({
     }
 
     if(typeof sourceUrl != "string") { 
+        console.error("sourceUrl: " + sourceUrl)
         throw new ServiceError("soureUrl is not a string"); 
     }
 
@@ -103,9 +104,11 @@ async function createSubmission({
             contestId, 
             userId, 
             sourceUrl
-        }); ; 
+        }); 
 
         await setFinalSubmission({contestId, userId, submissionId: insertedSubmission.id}); 
+
+        return insertedSubmission; 
     } 
     catch(err) {
         console.error("Error at createSubmission service: " + err); 

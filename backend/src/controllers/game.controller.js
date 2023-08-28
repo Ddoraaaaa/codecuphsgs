@@ -5,13 +5,21 @@ async function createGame(req, res, next) {
         return res.status(403).send({msg: "User is not admin"}); 
     }
 
-    console.log(req.body); 
+    console.log("req.files")
+    console.log(req.files); 
+
+    if(!req.files || !req.files['judgeFile'] || !req.files['renderFile'] || !req.files['statementFile']) { 
+        console.error("File uploaded but not found in request"); 
+        return res.status(500).send({msg: 'Internal Server Error'})
+    }
 
     const game = await GameModel.create({
         id: await GameModel.count() + 1, 
         name: req.body.name, 
         statementUrl: req.body.statementUrl, 
-        renderUrl: req.body.renderUrl
+        judgeUrl: req.files['judgeFile'][0].path, 
+        renderUrl: req.files['renderFile'][0].path, 
+        statementUrl: req.files['statementFile'][0].path
     })
 
     if(!game) { 
