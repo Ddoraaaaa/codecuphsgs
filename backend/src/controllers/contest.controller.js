@@ -20,8 +20,6 @@ async function createContest(req, res, next) {
 }
 
 async function getAllContests(req, res, next) { 
-    console.log("ayoooooo " + this); 
-
     let contests = await contestService.getAllContests(); 
     
     if(!req.session.isAdmin) { 
@@ -137,6 +135,19 @@ async function getContestResults(req, res, next) {
     const results = await contestService.getContestResults(contestId); 
     return res.status(200).send({results}); 
 }
+
+// async function rejudgeContest(req, res, next) { 
+//     const contestId = req.params.contestId; 
+//     if(!contestId) { 
+//         return res.status(400).send({msg: "Missing contest id"}); 
+//     }
+
+//     try { 
+//         await contestService.rejudgeContest({id: contestId}); 
+//     } catch(e) { 
+
+//     }
+// }
 
 function restrictedView(contest) { 
     return contest; 

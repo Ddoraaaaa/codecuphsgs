@@ -6,7 +6,7 @@ const contestSchema = new Schema({
 	id: {type: Number, required: true, unique: true},
 
     name: {type: String, required: true},
-	gameId: {type: Number}, 
+	gameId: {type: Number, required: true}, 
 	startDate: {type: Date, default: () => new Date()},
 	endDate: {type: Date, default: () => new Date()},
 

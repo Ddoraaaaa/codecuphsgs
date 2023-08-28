@@ -24,6 +24,9 @@ async function getAllContests() {
     return {success: boolean, error: undefined | string, insertedContest: undefined | object}
 */
 async function createContest(contest) {
+    console.log("gameId: ")
+    console.log(contest.gameId); 
+
     let reformattedContest = {
         id: await ContestModel.count() + 1, 
         name: contest.name, 
@@ -44,7 +47,8 @@ async function createContest(contest) {
         let insertedContest = await ContestModel.create(reformattedContest); 
         return insertedContest; 
     } catch (e) { 
-        throw new Error("Failed at creating ")
+        console.log("Error at creating contest service: " + e); 
+        throw new Error("Failed at creating contest service"); 
     }
 }
 
