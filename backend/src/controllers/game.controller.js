@@ -2,7 +2,7 @@ import GameModel from "../models/game.model";
 
 async function createGame(req, res, next) { 
     if(!req.session.userId || !req.session.isAdmin) { 
-        return res.status(401).send({msg: "User is not admin"}); 
+        return res.status(403).send({msg: "User is not admin"}); 
     }
 
     console.log(req.body); 
@@ -15,7 +15,7 @@ async function createGame(req, res, next) {
     })
 
     if(!game) { 
-        return res.status(401).send({msg: "Create game failed"}); 
+        return res.status(409).send({msg: "Create game failed"}); 
     }
 
     return res.status(200).send({msg: "created game"}); 
@@ -63,10 +63,10 @@ async function getGame(req, res, next) {
     let gameId = req.params.gameId; 
 
     if(!gameId) { 
-        return res.status(401).send({msg: "GameId missing"}); 
+        return res.status(400).send({msg: "GameId missing"}); 
     }
 
-    console.log(gameId)
+    console.log("Game ID: " + gameId)
 
     const game = await GameModel.findOne({
         id: gameId
@@ -74,7 +74,7 @@ async function getGame(req, res, next) {
 
 
     if(!game) { 
-        return res.status(401).send({msg: "fetch game failed"}); 
+        return res.status(409).send({msg: "No such game"}); 
     }
     
     if(!req.session.userId || !req.session.isAdmin) { 

@@ -4,7 +4,7 @@ export default function uploadSourceCodeMiddleware(req, res, next) {
     multerSingleFileUpload(req, res, function (error) { 
         if(error) { 
             console.error("Error at uploading file: " + error); 
-            res.status(401).send({msg: "Upload failed"});
+            res.status(500).send({msg: "Upload failed"});
         }
         else { 
             if(!req.file) { 

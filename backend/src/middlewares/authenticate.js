@@ -11,16 +11,16 @@ async function createSession(req, res, next) {
 
 
     if((!username && !email) || !password) { 
-        return res.status(401).send({msg: "Missing information"}); 
+        return res.status(400).send({msg: "Missing information"}); 
     }
 
     const user = username? await UserModel.findOne({username}): await UserModel.findOne({email})
     if(!user) {
-        return res.status(401).send({msg: "User not found"}); 
+        return res.status(409).send({msg: "User not found"}); 
     }
 
     if((await bcrypt.compare(password, user.password)) == false) { 
-        return res.status(401).send({
+        return res.status(409).send({
             msg: "Wrong password", 
         }); 
     }
@@ -41,7 +41,7 @@ async function createSession(req, res, next) {
 async function endSession(req, res, next) { 
     console.log("recieved log out request"); 
     if(!req.session.id) { 
-        return res.status(401).send({msg:"not logged in"})
+        return res.status(403).send({msg:"not logged in"})
     }
 
     req.session.destroy(); 

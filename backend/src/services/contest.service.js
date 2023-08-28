@@ -57,7 +57,7 @@ async function deleteContest(contestId) {
     let contestFoundCount = await ContestModel.count({id: contestId})
     assert( contestFoundCount <= 1); 
     if(contestFoundCount == 0) { 
-        return res.status(401).send({msg:"No contest found"}); 
+        return res.status(409).send({msg:"No contest found"}); 
     }
 
     let {acknowledged, deletedCount} = await contestModel.deleteMany({id: contestId}); 
@@ -135,7 +135,11 @@ async function setFinalSubmission({contestId, userId, submissionId}) {
 async function getContestResults(contestId) { 
     console.log(contestId); 
     const contest = await ContestModel.findOne({id: contestId}); 
-    return contest.result; 
+    return {
+        result: contest.result, 
+        startedJudging: contest.startedJudging, 
+        finishedJudging: contest.finishedJudging
+    }; 
 }
 
 async function setContestResults(contestId, result) { 

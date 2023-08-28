@@ -16,7 +16,8 @@ const contestSchema = new Schema({
 
 	finalSubmissions: {type: Map, of: Number, default: {}}, 
 
-	judged: {type: Boolean, default: false}, 
+	startedJudging: {type: Boolean, default: false}, 
+	finishedJudging: { type: Boolean, default: false}, 
 	currentState: {type: String, default: ""},
 	result: {type: String, default: ""}
 }, contestSchemaOptions); 
