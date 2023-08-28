@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getUserInfo, userInfoI } from "@/session_storage_api/api";
+import { getUserInfo, UserInfo } from "@/session_storage_api/api";
 import NavBar from "./navbar";
 import BodyContainer from "./bodyContainer";
 // import { getUserInfo } from "@/session_storage_api/api";
@@ -13,7 +13,7 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {  
   // sessionStorage only available after mounting -> useEffect to getUserInfo
-  const [userInfo, setUserInfo] = useState<null | userInfoI>(null); 
+  const [userInfo, setUserInfo] = useState<null | UserInfo>(null); 
   useEffect(() => { 
     setUserInfo(getUserInfo()); 
   }, [])

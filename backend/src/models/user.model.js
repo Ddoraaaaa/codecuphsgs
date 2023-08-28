@@ -11,19 +11,7 @@ const userSchema = new Schema({
     contests: {type: [Number]}
 })
 
-userSchema.methods.toJson = function () { 
-    return { 
-        name: this.name, 
-        username: this.username, 
-        isAdmin: this.isAdmin, 
-        email: this.email, 
-        contests: this.contests, 
-    }
-}
+const UserModel = model('User', userSchema)
 
-const User = model('User', userSchema)
-
-export { 
-    User 
-}
+export default UserModel; 
 

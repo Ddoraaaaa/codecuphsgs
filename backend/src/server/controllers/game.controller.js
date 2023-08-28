@@ -1,11 +1,9 @@
-import {gameModel} from "../models/game.model";
+import GameModel from "../models/game.model";
 
 async function createGame(req, res, next) { 
     if(!req.session.userId || !req.session.isAdmin) { 
         return res.status(401).send({msg: "User is not admin"}); 
     }
-
-    console.log(req.body); 
 
     const game = await gameModel.create({
         id: await gameModel.count() + 1, 
@@ -22,7 +20,6 @@ async function createGame(req, res, next) {
 }
 
 function gameInfoRestrictedView(game) { 
-    console.log(game); 
     return { 
         id: game.id, 
         name: game.name, 
@@ -33,7 +30,6 @@ function gameInfoRestrictedView(game) {
 }
 
 function gameInfoUnrestrictedView(game) { 
-    console.log(game); 
     return { 
         id: game.id, 
         name: game.name, 
@@ -66,7 +62,6 @@ async function getGame(req, res, next) {
         return res.status(401).send({msg: "GameId missing"}); 
     }
 
-    console.log(gameId)
 
     const game = await gameModel.findOne({
         id: gameId
@@ -78,14 +73,12 @@ async function getGame(req, res, next) {
     }
     
     if(!req.session.userId || !req.session.isAdmin) { 
-        console.log(gameInfoRestrictedView(game)); 
         return res.status(200).send({
             game: gameInfoRestrictedView(game), 
             msg: "fetched game"
         }); 
     }
     else { 
-        console.log(gameInfoUnrestrictedView(game))
         return res.status(200).send({
             game: gameInfoUnrestrictedView(game), 
             msg: "fetched game"
@@ -94,8 +87,10 @@ async function getGame(req, res, next) {
 
 }
 
-export { 
+const gameControler = { 
     getAllGames, 
     getGame,
     createGame, 
 }
+
+export default gameControler; 

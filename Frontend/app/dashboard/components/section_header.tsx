@@ -1,35 +1,30 @@
 "use client"; 
 
-import { getUserInfo, userInfoI } from "@/session_storage_api/api";
+import { getUserInfo, UserInfo } from "@/session_storage_api/api";
 import hsgs_logo from "../../public/logo.png"
 import SectionTab from "./section_tab";
-import { sectionTabI } from "./section_tab";
+import { SectionTabData } from "./section_tab";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 
 export default function SectionHeader({
     sectionTabs
 }: { 
-    sectionTabs: sectionTabI[]
+    sectionTabs: SectionTabData[]
 }): JSX.Element { 
-    const pathname = usePathname(); 
     const userInfo = getUserInfo(); 
 
-    const [selectedIndex, setSelectedIndex] = useState(0); 
-
-    const sectionTabFiltered = sectionTabs.filter(sectionTab => !sectionTab.adminRequired || (userInfo && userInfo.userIsAdmin)); 
-    console.log(sectionTabFiltered); 
+    const pathName = usePathname(); 
 
     return (
             // {/* If length is not converted to String -> lead to bug, I do not reall know why */}
         <nav className={`h-10 w-full grid grid-cols-12 items-center bg-gray-400`}>            
             {
-                sectionTabFiltered.map((sectionTab, index) => 
+                sectionTabs.map((sectionTab, index) => 
                     <SectionTab 
                         key={index}
-                        selected={pathname === sectionTab.href} 
-                        sectionTab={sectionTab}>
-                    </SectionTab>
+                        selected={pathName === sectionTab.href} 
+                        sectionTab={sectionTab}/>
                 )
             }
         </nav>

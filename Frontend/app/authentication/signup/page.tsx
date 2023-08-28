@@ -6,6 +6,7 @@ import assert from "assert";
 import {FormEvent, useState} from "react"
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import alertBackendAPIError from "@/app/utils/alertSystem/alertBackendAPIError";
 
 
 export default function SignupPage() { 
@@ -30,27 +31,20 @@ export default function SignupPage() {
 
     async function handleSubmitButtonClicked(event: FormEvent) { 
         event.preventDefault();
+
         try { 
-            let signupResult = await signup({
+            const userInfo = await signup({
                 username: username, 
                 email: email, 
                 password: password
             }); 
-            if(signupResult.success) { 
-                assert(signupResult.userInfo != undefined); 
-                setUserInfo(signupResult.userInfo); 
-                try { 
-                    router.push("/dashboard"); 
-                } catch(error) { 
-                    alert(error); 
-                }
-            }
-            else { 
-                alert(signupResult.msg); 
-            }
+           
+            setUserInfo(userInfo); 
+            
+            router.push("/dashboard"); 
         }
         catch (error) { 
-            alert(error); 
+            alertBackendAPIError(error, "signupSubmitHandler"); 
         }
     }
 
@@ -67,7 +61,7 @@ export default function SignupPage() {
                         </label>
                         <div className="mt-1">
                             <input type="text" name="username" id="username" autoComplete="username" onChange={updateUsername}
-                                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6">
                             </input>
                         </div>
                     </div>
@@ -77,7 +71,7 @@ export default function SignupPage() {
                         </label>
                         <div className="mt-1">
                             <input type="email" name="email" id="email" autoComplete="email" onChange={updateEmail}
-                                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6">
                             </input>
                         </div>
                     </div>
@@ -87,7 +81,7 @@ export default function SignupPage() {
                         </label>
                         <div className="mt-1">
                             <input type="password" name="password" id="password" autoComplete="password" onChange={updatePassword}
-                                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6">
                             </input>
                         </div>
                     </div>

@@ -3,9 +3,9 @@
 import { setUserInfo } from "@/session_storage_api/api";
 import {login} from "../../../backend_api/users"
 import Link from "next/link";
-import assert from "assert";
 import {FormEvent, useState} from "react"
 import { useRouter } from "next/navigation";
+import alertBackendAPIError from "@/app/utils/alertSystem/alertBackendAPIError";
 
 export default function LoginPage() { 
     let [username, setUsername] = useState<null | string>(null); 
@@ -31,26 +31,18 @@ export default function LoginPage() {
         event.preventDefault();
 
         try { 
-            let loginResult = await login({
+            let userInfo = await login({
                 username: username, 
                 email: email, 
                 password: password
             }); 
-            if(loginResult.success) { 
-                assert(loginResult.userInfo != undefined); 
-                setUserInfo(loginResult.userInfo); 
-                try { 
-                    router.push("/dashboard"); 
-                } catch(error) { 
-                    alert(error); 
-                }
-            }
-            else { 
-                alert(loginResult.msg); 
-            }
+                
+            setUserInfo(userInfo); 
+            
+            router.push("/dashboard"); 
         }
         catch (error) { 
-            alert(error); 
+            alertBackendAPIError(error, "loginSubmitHandler"); 
         }
     }
 
@@ -98,7 +90,7 @@ export default function LoginPage() {
                         </button>
                         <hr className="w-full"></hr>
                         <div className="w-full text-sm"> 
-                            Don't have an account?&#160;
+                            Don&apos;t have an account?&#160;
                             <Link href="/authentication/signup" className="underline">Register here</Link>
                         </div>
                     </div>

@@ -1,5 +1,9 @@
-import ContestModel from "../models/contest.model";
-import * as submissionService from "../services/submission.service" 
+import ContestModel from "../models/contest.model.js";
+import submissionService from "../services/submission.service.js" 
+import ServiceError from "./errors/serviceError.js";
+import ValidationError from "./errors/validationError.js";
+import DatabaseError from "./errors/databaseError.js";
+import UnknownInternalError from "./errors/unknownInternalError.js";
 
 async function getAllEndedUnjudgedContest() { 
     return Array.from(
@@ -19,6 +23,9 @@ async function getAllContests() {
     return {success: boolean, error: undefined | string, insertedContest: undefined | object}
 */
 async function createContest(contest) {
+    console.log("gameId: ")
+    console.log(contest.gameId); 
+
     let reformattedContest = {
         id: await ContestModel.count() + 1, 
         name: contest.name, 
@@ -39,7 +46,8 @@ async function createContest(contest) {
         let insertedContest = await ContestModel.create(reformattedContest); 
         return insertedContest; 
     } catch (e) { 
-        throw new Error("Failed at creating ")
+        console.log("Error at creating contest service: " + e); 
+        throw new Error("Failed at creating contest service"); 
     }
 }
 
@@ -52,7 +60,7 @@ async function deleteContest(contestId) {
     let contestFoundCount = await ContestModel.count({id: contestId})
     assert( contestFoundCount <= 1); 
     if(contestFoundCount == 0) { 
-        return res.status(401).send({msg:"No contest found"}); 
+        return res.status(409).send({msg:"No contest found"}); 
     }
 
     let {acknowledged, deletedCount} = await contestModel.deleteMany({id: contestId}); 
@@ -73,32 +81,42 @@ async function createSubmission({
     userId, 
     sourceUrl
 }) { 
+    if(isNaN(contestId)) { 
+        throw new ServiceError("Contest Id is not a number"); 
+    }
+
+    if(isNaN(userId)) { 
+        throw new ServiceError("UserId is not a number"); 
+    }
+
+    if(typeof sourceUrl != "string") { 
+        console.error("sourceUrl: " + sourceUrl)
+        throw new ServiceError("soureUrl is not a string"); 
+    }
+
     if(!isContestActive(contestId)) { 
-        return {
-            success: false, 
-            err: "Contest is not active"
-        }; 
+        throw new ValidationError("Invalid request: contest is not active"); 
     }
 
-    const submissionServiceResponse = submissionService.createSubmission({
-        contestId, 
-        userId, 
-        sourceUrl
-    }); 
+    try { 
+        const insertedSubmission = await submissionService.createSubmission({
+            contestId, 
+            userId, 
+            sourceUrl
+        }); 
 
-    if(!submissionServiceResponse.success) { 
-        return { 
-            success: false, 
-            err: submissionServiceResponse.err
-        }
-    }
+        await setFinalSubmission({contestId, userId, submissionId: insertedSubmission.id}); 
 
-    const insertedSubmission = submissionServiceResponse.insertedSubmission; 
-
-    await contestService.setFinalSubmission(contestId, userId, submissionData.id); 
-
-    return { 
-        success: true
+        return insertedSubmission; 
+    } 
+    catch(err) {
+        console.error("Error at createSubmission service: " + err); 
+        // if(err instanceof MongooseError) { 
+        //     throw new DatabaseError("Database error"); 
+        // }
+        // else { 
+            throw new UnknownInternalError(); 
+        // }
     }
 }
 
@@ -107,7 +125,7 @@ async function getFinalSubmission(contestId, userId) {
     return contestDocument.finalSubmissions.get((userId).toString()); 
 }
 
-async function setFinalSubmission(contestId, userId, submissionId) { 
+async function setFinalSubmission({contestId, userId, submissionId}) { 
     try {
         await ContestModel.updateOne(
             {id: submissionId, userId: userId, contestId: contestId}, 
@@ -123,7 +141,11 @@ async function setFinalSubmission(contestId, userId, submissionId) {
 async function getContestResults(contestId) { 
     console.log(contestId); 
     const contest = await ContestModel.findOne({id: contestId}); 
-    return contest.result; 
+    return {
+        result: contest.result, 
+        startedJudging: contest.startedJudging, 
+        finishedJudging: contest.finishedJudging
+    }; 
 }
 
 async function setContestResults(contestId, result) { 
@@ -146,13 +168,14 @@ async function setCurrentState(contestId, currentStateString) {
     await ContestModel.updateOne({id: contestId}, {currentState: currentStateString}); 
 }
 
-export { 
+const contestService = { 
     getAllEndedUnjudgedContest, 
     getAllContests, 
     createContest, 
     getContest, 
     deleteContest, 
     isContestActive, 
+    createSubmission, 
     getFinalSubmission, 
     setFinalSubmission, 
     getContestResults, 
@@ -160,3 +183,5 @@ export {
     getCurrentState, 
     setCurrentState
 }
+
+export default contestService; 

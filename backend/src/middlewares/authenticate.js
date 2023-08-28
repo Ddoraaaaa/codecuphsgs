@@ -1,37 +1,30 @@
-import {User} from "../models/user.model";
-import { userInfoRestrictedView } from "../services/user.service";
-const bcrypt = require("bcrypt"); 
+import UserModel from "../models/user.model.js";
+import { userInfoRestrictedView, userInfoUnrestrictedView } from "../utils/user.js";
+import bcrypt from "bcrypt"; 
 
-async function createSession(req, res, next) {
-    console.log(req.session)
-    
+async function createSession(req, res, next) {    
     let username = req.body.username; 
     let password = req.body.password; 
     let email = req.body.email; 
 
 
     if((!username && !email) || !password) { 
-        return res.status(401).send({msg: "Missing information"}); 
+        return res.status(400).send({msg: "Missing information"}); 
     }
 
-    const user = username? await User.findOne({username}): await User.findOne({email})
+    const user = username? await UserModel.findOne({username}): await UserModel.findOne({email})
     if(!user) {
-        return res.status(401).send({msg: "User not found"}); 
+        return res.status(409).send({msg: "User not found"}); 
     }
 
     if((await bcrypt.compare(password, user.password)) == false) { 
-        return res.status(401).send({
+        return res.status(409).send({
             msg: "Wrong password", 
         }); 
     }
 
-    console.log("user: " + user)
-
     req.session.userId = user.id; 
     req.session.isAdmin = user.isAdmin
-    console.log("after update: ")
-    console.log(req.session)
-    console.log(user.id)
     return res.status(200).send({
         msg: "logged in", 
         user: userInfoRestrictedView(user)
@@ -39,9 +32,10 @@ async function createSession(req, res, next) {
 }
 
 async function endSession(req, res, next) { 
-    console.log("recieved log out request"); 
+    console.log("Received log out request"); 
+    
     if(!req.session.id) { 
-        return res.status(401).send({msg:"not logged in"})
+        return res.status(403).send({msg:"not logged in"})
     }
 
     req.session.destroy(); 

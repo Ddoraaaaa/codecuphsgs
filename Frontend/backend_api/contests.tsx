@@ -1,6 +1,8 @@
-import assert from 'assert';
-import { EnumType } from 'typescript';
 import { getGameInfo } from './games';
+import validateResponse from './validation_utils/validateResponse';
+import UnknownInternalError from './errors/unknownInternalError';
+import ServerError from './errors/serverError';
+import ValidationError from './errors/validationError';
 
 
 enum ContestFormat {
@@ -13,18 +15,21 @@ enum JudgeMode {
     AUTO_JUDGE = "auto-judge"
 }
 
-interface ContestInfoI { 
+interface ContestInfo { 
     contestId: number, 
     contestName: string, 
+    gameId: number, 
     overview: string, 
     startDate: Date, 
     endDate: Date, 
     contestFormat: ContestFormat, 
     trialJudge: boolean, 
     judgeMode: JudgeMode, 
+    startedJudging: boolean, 
+    finishedJudging: boolean, 
 }
 
-interface ContestDetailsI { 
+interface ContestDetails { 
     contestId: number, 
     contestName: string, 
     startDate: Date, 
@@ -35,56 +40,48 @@ interface ContestDetailsI {
     gameRenderUrl: string
 }
 
+interface SubmissionInfo { 
+    submissionId: number, 
+    contestId: number, 
+    userId: number
+}
+
 async function createContest(contestInfo:Object) : Promise<{
     success: boolean, 
     msg: string
 }> {
-    try { 
-        const response = await fetch("/api/contests/create", 
-            { 
-                method: "POST", 
-                headers: {
-                    'Content-Type': 'application/json'
-                }, 
-                body: JSON.stringify(contestInfo), 
-            }
-        ); 
+    const response = await fetch("/api/contests/create", 
+        { 
+            method: "POST", 
+            headers: {
+                'Content-Type': 'application/json'
+            }, 
+            body: JSON.stringify(contestInfo), 
+        }
+    ); 
 
-        return {
-            success: response.ok, 
-            msg: (await response.json()).msg
-        }
-    } catch(e) { 
-        return { 
-            success: false, 
-            msg: "Error: " + e 
-        }
+    const { status, body} = await validateResponse(response); 
+
+    try { 
+        return body.contest; 
+    }
+    catch(error: any) { 
+        console.log("Unknown internal api error at create contest api: " + error); 
+        throw new UnknownInternalError(); 
     }
 }
 
-async function getAllContests() : Promise<{ 
-    success: boolean, 
-    msg: string, 
-    contestsInfo?: ContestInfoI[]
-}>{  
-    // cannot figure out the bug???? Just need to try catch!!!
-    try { 
-        // why is it not working? apparently await can escape try / catch block
-        const response = await fetch("/api/contests", 
-            { 
-                method: "GET"
-            }
-        ); 
+async function getAllContests() : Promise<ContestInfo[]>{  
+    const response = await fetch("/api/contests", 
+        { 
+            method: "GET"
+        }
+    ); 
 
-        const success = response.ok;
-        const jsonResponse = await response.json(); 
-        const msg = jsonResponse.msg;  
-        const contests = jsonResponse.contests; 
-        
-        return { 
-            success, 
-            msg, 
-            contestsInfo: contests.map((contest) => {
+    const { status, body} = await validateResponse(response); 
+    
+    try { 
+        return body.contests.map((contest: any) => {
                 return { 
                     contestId: contest.id, 
                     contestName: contest.name, 
@@ -92,61 +89,35 @@ async function getAllContests() : Promise<{
                     endDate: new Date(contest.endDate),
                 }
             })
-        }
-    } catch(error) {
-        return { 
-            success: false, 
-            msg: error.toString()
-        }
+    } catch(error: any) {
+        console.log("Unknown internal api error at getAllContests api: " + error); 
+        throw new UnknownInternalError(); 
     }
 }
 
 async function getContestDetails(
     contestId: number
-): Promise<{
-    success: boolean, 
-    msg: string, 
-    contestDetails?: ContestDetailsI 
-}> { 
+): Promise<ContestDetails> { 
+    const response = await fetch("/api/contest/" + contestId, 
+        { 
+            method: "GET"
+        }
+    ); 
+
+    const {status, body} = await validateResponse(response); 
+    
+    let contest; 
     try { 
-        const response = await fetch("/api/contest/" + contestId, 
-            { 
-                method: "GET"
-            }
-        ); 
-        const success = response.ok;
-        const jsonResponse = await response.json(); 
-        const msg = jsonResponse.msg;  
-        const contest = jsonResponse.contest; 
+        contest = body.contest; 
+    } catch(error) { 
+        console.log("Error at getContestDetails API: " + error); 
+        throw new ServerError(); 
+    }
 
-        console.log(jsonResponse); 
+    const game = await getGameInfo(contest.gameId); 
 
-        if(!success) { 
-            return { 
-                success, 
-                msg
-            }
-        }
-
-        console.log(contest); 
-
-        const gameInfoResponse = await getGameInfo(contest.gameId); 
-        console.log(gameInfoResponse); 
-
-        if(!gameInfoResponse.success) { 
-            return { 
-                success: false, 
-                msg: "fetching game failed. " + gameInfoResponse.msg
-            }
-        }
-
-        const game = gameInfoResponse.gameInfo; 
-        assert(game != undefined); 
-
+    try { 
         return { 
-            success: true, 
-            msg: "Contest query: " + msg + "\nGame query: " + gameInfoResponse.msg, 
-            contestDetails: { 
                 contestId: contest.id, 
                 contestName: contest.name, 
                 startDate: new Date(contest.startDate), 
@@ -155,13 +126,11 @@ async function getContestDetails(
                 gameName: game.name, 
                 gameStatementUrl: game.statementUrl, 
                 gameRenderUrl: game.renderUrl
-            }
-        }; 
-    }catch(e) {
-        return { 
-            success: false, 
-            msg: e.toString()
-        }; 
+        }
+    }
+    catch(error: any) {
+        console.log("Error at getContestDetails API: " + error); 
+        throw new UnknownInternalError(); 
     }
 }
 
@@ -171,36 +140,36 @@ async function submitCode({
 }:{ 
     contestId: number, 
     file: File
-}): Promise<{ 
-    success: boolean, 
-    msg: string
-}> {
-    try { 
-        const data = new FormData(); 
-        data.append("sourceCode", file); 
-        const response = await fetch("/api/contest/" + contestId + "/submit", 
-            { 
-                method: "POST", 
-                body: data
-            }
-        ); 
-        const success = response.ok;
-        const jsonResponse = await response.json(); 
-        const msg = jsonResponse.msg;  
+}): Promise<SubmissionInfo> {
+    if(!file) { 
+        throw new ValidationError("File missing"); 
+    }
+    if(typeof contestId != "number") { 
+        throw new ValidationError("ContestId is not a number")
+    }
 
-        console.log(jsonResponse); 
+    const data = new FormData(); 
 
-        return { 
-            success, 
-            msg
+    data.append("sourceCode", file); 
+    const response = await fetch("/api/contest/" + contestId + "/submit", 
+        { 
+            method: "POST", 
+            body: data
         }
+    ); 
 
-    }catch(error) {
-        alert(error); 
+    const {status, body} = await validateResponse(response);
+    
+    try { 
+        const submission = body.submission; 
         return { 
-            success: false, 
-            msg: error.toString()
-        }; 
+            submissionId: submission.id, 
+            contestId: submission.contestId, 
+            userId: submission.userId
+        }
+    }catch(error: any) {
+        console.log("Error at submitCode API: " + error); 
+        throw new UnknownInternalError(); 
     }
 }
 
@@ -214,8 +183,9 @@ async function getResult(contestId:Number) {
 }
 
 export type {  
-    ContestInfoI, 
-    ContestDetailsI
+    ContestInfo, 
+    ContestDetails, 
+    SubmissionInfo
 }
 
 export { 

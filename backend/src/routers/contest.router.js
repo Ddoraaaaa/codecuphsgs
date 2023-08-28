@@ -1,5 +1,6 @@
 import { Router } from "express";
-import * as contestController from "../controllers/contest.controller"
+import * as contestController from "../controllers/contest.controller.js"
+import userCodeUpload from "../middlewares/userCodeUpload.js";
 
 const contestRouter = Router(); 
 
@@ -8,6 +9,6 @@ contestRouter.get("/contests", contestController.getAllContests);
 contestRouter.post("/contests/create", contestController.createContest); 
 contestRouter.get("/contest/:contestId/", contestController.getContest); 
 contestRouter.delete("/deletecontest", contestController.deleteContest); 
-contestRouter.post("/contest/:contestId/submit", contestController.submitToContest);
+contestRouter.post("/contest/:contestId/submit", userCodeUpload, contestController.createSubmission);
 
 export default contestRouter; 

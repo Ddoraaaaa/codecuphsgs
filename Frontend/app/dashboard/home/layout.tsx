@@ -1,12 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { getUserInfo, userInfoI } from "@/session_storage_api/api";
-import NavBar from "./navbar";
-import BodyContainer from "./bodyContainer";
-// import { getUserInfo } from "@/session_storage_api/api";
-import { useRouter } from "next/router";
-import SubsectionBodyContainer from "../utils/subsectionBodyContainer";
+import SubsectionBodyContainer from "../components/subsectionBodyContainer";
 
 export default function DashboardLayout({
   children

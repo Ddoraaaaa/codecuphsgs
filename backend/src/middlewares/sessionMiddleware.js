@@ -1,5 +1,7 @@
 import session from "express-session";
-const MongoDBStore = require("connect-mongodb-session")(session);
+import ConnectMongoDBSession from "connect-mongodb-session";
+
+const MongoDBStore = ConnectMongoDBSession(session); 
 
 const store = new MongoDBStore({
     uri: process.env.MONGODB_URI,

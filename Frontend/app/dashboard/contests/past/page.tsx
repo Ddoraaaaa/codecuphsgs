@@ -1,17 +1,15 @@
 "use client"; 
 
-import { ContestInfoI } from "@/backend_api/contests"
-import { useState, useEffect, useContext } from "react"
+import { ContestInfo } from "@/backend_api/contests"
+import { useContext } from "react"
 import Link from "next/link"
-import { displayMili } from "../helper"
-import { error } from "console";
 import { ContestsInfoContext } from "../layout";
 import assert from "assert";
 
 function PastContest({
     contestInfo
 }: { 
-    contestInfo: ContestInfoI
+    contestInfo: ContestInfo
 }): JSX.Element {
     return (
         <div className="min-w-0 flex gap-x-4">

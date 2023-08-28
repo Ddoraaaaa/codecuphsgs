@@ -1,6 +1,6 @@
 "use client"; 
 
-import { ContestInfoI } from "@/backend_api/contests"
+import { ContestInfo } from "@/backend_api/contests"
 import { useState, useEffect, useContext } from "react"
 import Link from "next/link"
 import { displayMili } from "../helper"
@@ -10,12 +10,12 @@ import assert from "assert";
 function OngoingContest({
     contestInfo
 }: { 
-    contestInfo: ContestInfoI
+    contestInfo: ContestInfo
 }): JSX.Element {
-    const [beforeEnd, setBeforeEnd] = useState(displayMili(contestInfo.endDate - (new Date())));
+    const [beforeEnd, setBeforeEnd] = useState(displayMili(contestInfo.endDate.getTime() - (new Date()).getTime()));
     useEffect(() => { 
         const interval = setInterval(() => {
-            setBeforeEnd(displayMili(contestInfo.endDate - new Date()));
+            setBeforeEnd(displayMili(contestInfo.endDate.getTime() - new Date().getTime()));
         }, 1000);
     
         return () => clearInterval(interval);

@@ -1,22 +1,23 @@
 "use client";
 
-import { GameInfoI, getAllGamesInfo } from "@/backend_api/games";
-import assert from "assert";
+import alertBackendAPIError from "@/app/utils/alertSystem/alertBackendAPIError";
+import { GameInfo, getAllGamesInfo } from "@/backend_api/games";
 import { useEffect, useState } from "react";
 
  
 
 export default function GameListPage() {
 
-    const [gameInfos, setGameInfos] = useState<null | Array<GameInfoI> >(null); 
+    const [gameInfos, setGameInfos] = useState<null | Array<GameInfo> >(null); 
 
     async function fetchGameInfo() {
-        const fetchResult = await getAllGamesInfo(); 
-        if(fetchResult.success) { 
-            const gamesInfo = fetchResult.gamesInfo; 
-            assert(gamesInfo != undefined); 
+        try { 
+            const gamesInfo = await getAllGamesInfo(); 
+            
             setGameInfos(gamesInfo);
-        } 
+        } catch(error: any) { 
+            alertBackendAPIError(error, "gamesInfoFetcher"); 
+        }
     }
 
     useEffect(() => { 

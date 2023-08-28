@@ -1,16 +1,16 @@
-import { ContestDetailsI, ContestInfoI } from "@/backend_api/contests";
+import { ContestDetails, ContestInfo } from "@/backend_api/contests";
 
-interface userInfoI { 
+interface UserInfo { 
     userId: number, 
     username: string, 
     userIsAdmin: boolean; 
 }
 
-function setUserInfo(userInfo: userInfoI | null) { 
+function setUserInfo(userInfo: UserInfo | null) { 
     sessionStorage.setItem('userInfo', JSON.stringify(userInfo)); 
 }
 
-function getUserInfo(): userInfoI | null { 
+function getUserInfo(): UserInfo | null { 
     if(typeof window === "undefined" ) { 
         return null; 
     }
@@ -21,11 +21,11 @@ function getUserInfo(): userInfoI | null {
     return JSON.parse(userInfoString); 
 }
 
-function setContestsInfo(contestsInfo: ContestInfoI[] | null) { 
+function setContestsInfo(contestsInfo: ContestInfo[] | null) { 
     sessionStorage.setItem('contestsInfo', JSON.stringify(contestsInfo)); 
 }
 
-function getContestsInfo(): ContestInfoI[] | null { 
+function getContestsInfo(): ContestInfo[] | null { 
     let contestsInfoString = sessionStorage.getItem("contestsInfo"); 
     if(contestsInfoString == null) { 
         return null; 
@@ -33,11 +33,11 @@ function getContestsInfo(): ContestInfoI[] | null {
     return JSON.parse(contestsInfoString); 
 }
 
-function setContestDetails(contestDetails: ContestDetailsI | null) { 
+function setContestDetails(contestDetails: ContestDetails | null) { 
     sessionStorage.setItem("contestDetails", JSON.stringify(contestDetails)); 
 }
 
-function getContestDetails(): ContestDetailsI | null { 
+function getContestDetails(): ContestDetails | null { 
     let contestDetailsString = sessionStorage.getItem("contestDetails"); 
     if(contestDetailsString == null) { 
         return null; 
@@ -46,7 +46,7 @@ function getContestDetails(): ContestDetailsI | null {
 }
 
 export type { 
-    userInfoI
+    UserInfo
 }
 
 export {  
