@@ -18,12 +18,15 @@ enum JudgeMode {
 interface ContestInfo { 
     contestId: number, 
     contestName: string, 
+    gameId: number, 
     overview: string, 
     startDate: Date, 
     endDate: Date, 
     contestFormat: ContestFormat, 
     trialJudge: boolean, 
     judgeMode: JudgeMode, 
+    startedJudging: boolean, 
+    finishedJudging: boolean, 
 }
 
 interface ContestDetails { 
@@ -111,7 +114,7 @@ async function getContestDetails(
         throw new ServerError(); 
     }
 
-    const game = await getGameInfo(contest.id); 
+    const game = await getGameInfo(contest.gameId); 
 
     try { 
         return { 
